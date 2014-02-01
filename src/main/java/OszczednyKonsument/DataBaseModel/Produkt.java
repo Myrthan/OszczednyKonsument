@@ -11,4 +11,8 @@ public class Produkt {
 		this.producent=producent;
 		this.typ=typ;
 	}
+	@Override
+	public String toString(){
+		return id_produkt.toString()+" "+nazwa+" "+producent+" "+typ;
+	}
 }
