@@ -1,5 +1,9 @@
 package OszczednyKonsument.server;
 
+import java.sql.Connection;
+
+import OszczednyKonsument.DataBase.Database;
+
 public class Server {
 
 	/**
@@ -7,7 +11,8 @@ public class Server {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("test");
+		Connection conn = Database.getConnection();
+		Database.closeConnection();
 	}
 
 }
