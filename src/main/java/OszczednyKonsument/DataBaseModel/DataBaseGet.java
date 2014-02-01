@@ -9,7 +9,7 @@ import java.util.List;
 import OszczednyKonsument.DataBase.Database;
 
 public class DataBaseGet {
-	public List<Produkt> selectProdukty(){
+	public static List<Produkt> selectProdukty(){
         List<Produkt> produkty = new LinkedList<Produkt>();
         try {
             ResultSet result = Database.getConnection().prepareStatement("select * from produkty").executeQuery();
