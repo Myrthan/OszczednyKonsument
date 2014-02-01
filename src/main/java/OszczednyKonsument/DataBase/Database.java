@@ -41,8 +41,8 @@ public class Database {
 
 		try {
 			connection = DriverManager.getConnection(
-					"jdbc:postgresql://192.168.1.6/oszczednykonsumentdatabase",
-					"myrthan", "oszczedny");
+					"jdbc:postgresql://localhost/piotr",
+					"piotr", "kocham1ale12");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
