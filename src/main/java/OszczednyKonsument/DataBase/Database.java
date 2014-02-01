@@ -4,6 +4,16 @@ import java.sql.*;
 
 import javax.naming.ConfigurationException;
 
+/**
+ * Baza danych.
+ * Zaimplementowane funkcje:
+ * -Łączenie się z bazą danych
+ *
+ * 
+ * @author myrthan
+ * 
+ *
+ */
 public class Database {
 
 	private static boolean isPrepared = false;
@@ -22,6 +32,9 @@ public class Database {
 		isPrepared = true;
 	}
 
+	/**
+	 * @return
+	 */
 	public static Connection getConnection() {
 		if (!isPrepared)
 			prepare();
@@ -36,6 +49,9 @@ public class Database {
 		}
 		return connection;
 	}
+	/**
+	 * 
+	 */
 	public static void closeConnection() {
 
 		try {

@@ -6,15 +6,22 @@ import java.sql.SQLException;
 
 import OszczednyKonsument.DataBase.Database;
 
+/**
+ * Klasa odpowiedzialna za modyfikowanie BD.
+ * 
+ * @author myrthan
+ *
+ */
 public class DataBaseUpdate {
 
+	@SuppressWarnings("javadoc")
 	public boolean insertKlient(String imie, String nazwisko, int wiek,
 			String adres, String miasto, String kod_pocztowy, String nick,
 			Date data_rejestracji, String haslo, String email) {
 		try {
 			PreparedStatement prepStmt = Database.getConnection()
 					.prepareStatement(
-							"insert into czytelnicy values (NULL, ?, ?, ?);");
+							"insert into czytelnicy values (NULL, ?, ?, ?,?,?,?,?,?,?,?);");
 			prepStmt.setString(1, nazwisko);
 			prepStmt.setString(2, imie);
 			prepStmt.setInt(3, wiek);

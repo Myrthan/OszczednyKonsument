@@ -4,6 +4,12 @@ import java.sql.Connection;
 
 import OszczednyKonsument.DataBase.Database;
 
+/**
+ * Server
+ * 
+ * @author myrthan
+ *
+ */
 public class Server {
 
 	/**
