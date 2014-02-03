@@ -30,6 +30,7 @@ public class DataBaseGet {
             e.printStackTrace();
             return null;
         }
+        Database.closeConnection();
         return container;
 	}
 	public static List<Produkt> selectProdukty(){
