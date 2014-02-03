@@ -20,6 +20,8 @@ public class Server {
 		// TODO Auto-generated method stub
 		Connection conn = Database.getConnection();
 		//System.out.println(DataBaseGet.selectProdukty());
+		System.out.println(DataBaseGet.select("select * from produkty",
+				new OszczednyKonsument.DataBaseModel.ProduktGetter(),null));
 		Database.closeConnection();
 	}
 

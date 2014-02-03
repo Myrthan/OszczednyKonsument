@@ -9,26 +9,28 @@ import java.util.List;
 import OszczednyKonsument.DataBase.Database;
 
 public class DataBaseGet {
-	public static List<Produkt> selectProdukty(){
-        List<Produkt> produkty = new LinkedList<Produkt>();
+	/**
+	 * @param query
+	 * @param rg
+	 * @param rf
+	 * @return returns list of objects returned by query
+	 */
+	public static  <T> List<T> select(String query,ReadGetter<T> rg, ReadFilter<T> rf){
+        List<T> container = new LinkedList<T>();
         try {
-            ResultSet result = Database.getConnection().prepareStatement("select * from produkty").executeQuery();
-            Integer id_produkt;
-            String nazwa;
-            String producent;
-            String typ;
+            ResultSet result = Database.getConnection().prepareStatement(query).executeQuery();
+            rg.takeResultSet(result);
+            T ref;
             while(result.next()) {
-                id_produkt = result.getInt("id_produkt");
-                nazwa = result.getString("nazwa");
-                producent = result.getString("producent");
-                typ=result.getString("typ");
-                produkty.add(new Produkt(id_produkt,nazwa,producent,typ));
+            	ref=rg.read();
+            	if(rf==null || rf.accept(ref))
+            		container.add(ref);
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
-        return produkty;
+        return container;
 	}
 
 }
