@@ -32,6 +32,8 @@ public class DataBaseGet {
         }
         return container;
 	}
-
+	public static List<Produkt> selectProdukty(){
+		return select("select * from produkty", new ProduktGetter(), null);
+	}
 }
 
