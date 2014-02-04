@@ -15,4 +15,8 @@ public class Produkt {
 	public String toString(){
 		return id_produkt.toString()+" "+nazwa+" "+producent+" "+typ;
 	}
+	public Object[] toObject() {
+		Object[] w = {id_produkt,nazwa,producent,typ};
+		return w;
+	}
 }

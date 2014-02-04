@@ -1,5 +1,7 @@
 package OszczednyKonsument.server;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.sql.Connection;
 
 import OszczednyKonsument.DataBase.Database;
@@ -17,12 +19,22 @@ public class Server {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		/*
+		try {
+			ServerSocket listener = new ServerSocket(17373);
+			while(!Thread.currentThread().isInterrupted()) {
+				
+			}
+			listener.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+		
+		
 		// TODO Auto-generated method stub
-		Connection conn = Database.getConnection();
 		//System.out.println(DataBaseGet.selectProdukty());
-		System.out.println(DataBaseGet.select("select * from produkty",
-				new OszczednyKonsument.DataBaseModel.ProduktGetter(),null));
-		Database.closeConnection();
+		System.out.println(DataBaseGet.selectProdukty());
+		
 	}
 
 }
