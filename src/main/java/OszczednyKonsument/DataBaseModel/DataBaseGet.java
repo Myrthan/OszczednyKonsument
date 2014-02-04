@@ -67,7 +67,7 @@ public class DataBaseGet {
 		return select(
 				"select nick,komentarz,ocena from opinie o "
 				+ "join klienci k on o.klient=k.id_klient join produkty p on "
-				+ "o.produkt=p.id_produkt and p.nazwa="+nazwa_prod+";"
+				+ "o.produkt=p.id_produkt and p.nazwa='"+nazwa_prod+"';"
 				,new ReadGetter<Opinia>(){
 					@Override
 					public Opinia read() {

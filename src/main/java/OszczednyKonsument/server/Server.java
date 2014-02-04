@@ -34,7 +34,8 @@ public class Server {
 		// TODO Auto-generated method stub
 		//System.out.println(DataBaseGet.selectProdukty());
 		System.out.println(DataBaseGet.selectProdukty());
-		
+		System.out.println(DataBaseGet.selectOpinie(12));
+		System.out.println(DataBaseGet.selectOpinie("Ożywi"));
 	}
 
 }

@@ -9,4 +9,8 @@ public class Opinia {
 		this.komentarz=komentarz;
 		this.ocena=ocena;
 	}
+	@Override
+	public String toString(){
+		return nick+" "+komentarz+" "+ocena;
+	}
 }
