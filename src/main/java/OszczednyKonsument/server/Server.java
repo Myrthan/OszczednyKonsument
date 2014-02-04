@@ -36,6 +36,8 @@ public class Server {
 		System.out.println(DataBaseGet.selectProdukty());
 		System.out.println(DataBaseGet.selectOpinie(12));
 		System.out.println(DataBaseGet.selectOpinie("Ożywi"));
+		System.out.println(DataBaseGet.selectRecenzje(6));
+		System.out.println(DataBaseGet.selectRecenzje("Ewy-coś"));
 	}
 
 }

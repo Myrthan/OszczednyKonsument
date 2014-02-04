@@ -80,6 +80,39 @@ public class DataBaseGet {
 					}
 				},null);
 	}
-	
+	public static List<Recenzja> selectRecenzje(Integer id_prod){
+		return select("select recenzja, autor from recenzje r where r.id_produkt="+id_prod.toString()+";",
+				new ReadGetter<Recenzja>() {
+					@Override
+					public Recenzja read() {
+						// TODO Auto-generated method stub
+						try {
+							return new Recenzja(rs.getString("recenzja"),rs.getString("autor"));
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							return null;
+						}
+					}
+				}
+				,null);
+	}
+	public static List<Recenzja> selectRecenzje(String nazwa_prod){
+		return select("select recenzja, autor from recenzje r join produkty p on r.id_produkt=p.id_produkt "
+				+ "and p.nazwa='"+nazwa_prod
+				+"';",
+				new ReadGetter<Recenzja>() {
+					@Override
+					public Recenzja read() {
+						try {
+							return new Recenzja(rs.getString("recenzja"),rs.getString("autor"));
+						} catch (SQLException e) {
+							e.printStackTrace();
+							return null;
+						}
+					}
+				}
+				,null);
+	}
 }
 
