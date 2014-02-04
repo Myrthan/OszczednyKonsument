@@ -33,7 +33,18 @@ public class DataBaseGet {
         return container;
 	}
 	public static List<Produkt> selectProdukty(){
-		return select("select * from produkty", new ProduktGetter(), null);
+		return select("select * from produkty", new ReadGetter<Produkt>(){
+			@Override
+			public Produkt read() {
+				try {
+					return new Produkt(rs.getInt("id_produkt"),rs.getString("nazwa"),rs.getString("producent"),
+									rs.getString("typ"));
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		}, null);
 	}
 }
 
