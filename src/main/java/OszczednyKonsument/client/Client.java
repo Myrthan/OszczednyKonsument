@@ -19,7 +19,11 @@ public class Client {
 	private Writer out;
 	public Client() {
 		//net();
-		
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				ClientApp.createAndShowGUI();
+			}
+		});
 		
 	}
 	public void net() {

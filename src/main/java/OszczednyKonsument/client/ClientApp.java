@@ -108,7 +108,7 @@ public class ClientApp extends JPanel {
 		}
 	}
 
-	private static void createAndShowGUI() {
+	public static void createAndShowGUI() {
 		JFrame frame = new JFrame("Oszczedny Konsument");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -121,7 +121,6 @@ public class ClientApp extends JPanel {
 	}
 
 	public static void main(String[] args) {
-		DataBaseGet.selectProdukty();
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				createAndShowGUI();
