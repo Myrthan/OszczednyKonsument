@@ -41,6 +41,7 @@ import javax.swing.JButton;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import OszczednyKonsument.DataBaseModel.DataBaseGet;
 
@@ -50,10 +51,10 @@ public class Logger extends JFrame {
 	private final Action action = new SwingAction();
 	public Logger() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gridBagLayout.columnWidths = new int[]{0, 124, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		getContentPane().setLayout(gridBagLayout);
 		
 		JLabel lblNick = new JLabel("nick:");
@@ -94,10 +95,18 @@ public class Logger extends JFrame {
 		btnLogIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(checkPassword(textField.getText(),passwordField.getPassword())){
-					JOptionPane.showMessageDialog(Logger.this, "Login OK");
+					SwingUtilities.invokeLater(new Runnable(){
+						public void run(){
+							JOptionPane.showMessageDialog(Logger.this, "Login OK");
+						}
+					});
 				}
 				else{
-					JOptionPane.showMessageDialog(Logger.this, "Zły login lub hasło");
+					SwingUtilities.invokeLater(new Runnable(){
+						public void run(){
+							JOptionPane.showMessageDialog(Logger.this, "Zły login lub hasło");
+						}
+					});
 				}
 			}
 		});
@@ -107,6 +116,19 @@ public class Logger extends JFrame {
 		gbc_btnLogIn.gridx = 1;
 		gbc_btnLogIn.gridy = 2;
 		getContentPane().add(btnLogIn, gbc_btnLogIn);
+		
+		JLabel label = new JLabel("");
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.insets = new Insets(0, 0, 5, 0);
+		gbc_label.gridx = 1;
+		gbc_label.gridy = 3;
+		getContentPane().add(label, gbc_label);
+		
+		JButton btnZarejestrujSi = new JButton("Rejestracja");
+		GridBagConstraints gbc_btnZarejestrujSi = new GridBagConstraints();
+		gbc_btnZarejestrujSi.gridx = 1;
+		gbc_btnZarejestrujSi.gridy = 4;
+		getContentPane().add(btnZarejestrujSi, gbc_btnZarejestrujSi);
 		
 	}
 	
