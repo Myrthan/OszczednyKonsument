@@ -1,8 +1,12 @@
 package OszczednyKonsument.DataBaseModel;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,11 +89,9 @@ public class DataBaseGet {
 				new ReadGetter<Recenzja>() {
 					@Override
 					public Recenzja read() {
-						// TODO Auto-generated method stub
 						try {
 							return new Recenzja(rs.getString("recenzja"),rs.getString("autor"));
 						} catch (SQLException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 							return null;
 						}
@@ -113,6 +115,41 @@ public class DataBaseGet {
 					}
 				}
 				,null);
+	}
+	private static class KlientAuth{
+		String login;
+		byte[] passwd;
+		public KlientAuth(String login, byte[] passwd){
+			this.login=login;
+			this.passwd=passwd;
+		}
+	}
+	private static byte[] toBytes(char[] chars) {
+	    CharBuffer charBuffer = CharBuffer.wrap(chars);
+	    ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+	    byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
+	            byteBuffer.position(), byteBuffer.limit());
+	    Arrays.fill(charBuffer.array(), '\u0000'); // clear sensitive data
+	    Arrays.fill(byteBuffer.array(), (byte) 0); // clear sensitive data
+	    return bytes;
+	}
+	public static boolean checkPassword(String login, char[] passwd){
+		List<KlientAuth> myList=select("select nick, hasło from klienci where nick='"+login+"';",
+				new ReadGetter(){
+					@Override
+					public KlientAuth read() {
+						try {
+							return new KlientAuth(rs.getString("nick"),rs.getBytes("hasło"));
+						} catch (SQLException e) {
+							e.printStackTrace();
+							return null;
+						}
+					}
+				}
+				,null);
+		if(myList.size()>0 && Arrays.equals(toBytes(passwd), myList.get(0).passwd))
+			return true;
+		return false;
 	}
 }
 
