@@ -45,12 +45,86 @@ import javax.swing.SwingUtilities;
 
 import OszczednyKonsument.DataBaseModel.DataBaseGet;
 
-public class Logger extends JFrame {
+public class Logger extends JPanel {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private final Action action = new SwingAction();
+
 	public Logger() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{0, 0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		setLayout(gridBagLayout);
+		
+		JLabel lblNick = new JLabel("nick: ");
+		GridBagConstraints gbc_lblNick = new GridBagConstraints();
+		gbc_lblNick.anchor = GridBagConstraints.EAST;
+		gbc_lblNick.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNick.gridx = 0;
+		gbc_lblNick.gridy = 0;
+		add(lblNick, gbc_lblNick);
+		
+		textField = new JTextField();
+		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.insets = new Insets(0, 0, 5, 0);
+		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField.gridx = 1;
+		gbc_textField.gridy = 0;
+		add(textField, gbc_textField);
+		textField.setColumns(10);
+		
+		JLabel lblHaso = new JLabel("hasło: ");
+		GridBagConstraints gbc_lblHaso = new GridBagConstraints();
+		gbc_lblHaso.anchor = GridBagConstraints.EAST;
+		gbc_lblHaso.insets = new Insets(0, 0, 5, 5);
+		gbc_lblHaso.gridx = 0;
+		gbc_lblHaso.gridy = 1;
+		add(lblHaso, gbc_lblHaso);
+		
+		passwordField = new JPasswordField();
+		GridBagConstraints gbc_passwordField = new GridBagConstraints();
+		gbc_passwordField.insets = new Insets(0, 0, 5, 0);
+		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_passwordField.gridx = 1;
+		gbc_passwordField.gridy = 1;
+		add(passwordField, gbc_passwordField);
+		
+		JButton btnZalogujSi = new JButton("Zaloguj się!");
+		btnZalogujSi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(checkPassword(textField.getText(),passwordField.getPassword())){
+					SwingUtilities.invokeLater(new Runnable(){
+						public void run(){
+							JOptionPane.showMessageDialog(Logger.this, "Login OK");
+						}
+					});
+				}
+				else{
+					SwingUtilities.invokeLater(new Runnable(){
+						public void run(){
+							JOptionPane.showMessageDialog(Logger.this, "Zły login lub hasło");
+						}
+					});
+				}
+			}
+		});
+		btnZalogujSi.setAction(action);
+		btnZalogujSi.setText("Zaloguj się");
+		GridBagConstraints gbc_btnZalogujSi = new GridBagConstraints();
+		gbc_btnZalogujSi.insets = new Insets(0, 0, 5, 0);
+		gbc_btnZalogujSi.gridx = 1;
+		gbc_btnZalogujSi.gridy = 2;
+		add(btnZalogujSi, gbc_btnZalogujSi);
+		
+		JButton btnRejestracja = new JButton("Rejestracja");
+		GridBagConstraints gbc_btnRejestracja = new GridBagConstraints();
+		gbc_btnRejestracja.gridx = 1;
+		gbc_btnRejestracja.gridy = 4;
+		add(btnRejestracja, gbc_btnRejestracja);
+
+		/*GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 124, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
@@ -129,16 +203,16 @@ public class Logger extends JFrame {
 		gbc_btnZarejestrujSi.gridx = 1;
 		gbc_btnZarejestrujSi.gridy = 4;
 		getContentPane().add(btnZarejestrujSi, gbc_btnZarejestrujSi);
-		
+		*/
 	}
 	
 	public static void createAndShowGUI() {
-		JFrame frame = new Logger();
+		JFrame frame = new JFrame("Oszczedny Konsument");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		//ClientApp newContentPane = new ClientApp();
-		//newContentPane.setOpaque(true); // content panes must be opaque
-		//frame.setContentPane(newContentPane);
+		Logger newContentPane = new Logger();
+		newContentPane.setOpaque(true); // content panes must be opaque
+		frame.setContentPane(newContentPane);
 
 		frame.pack();
 		frame.setVisible(true);
@@ -151,15 +225,16 @@ public class Logger extends JFrame {
 			}
 		});
 	}
+
+	private boolean checkPassword(String login, char[] passwd){
+		return DataBaseGet.checkPassword(login, passwd);
+	}
 	private class SwingAction extends AbstractAction {
 		public SwingAction() {
-			//putValue(NAME, "SwingAction");
-			//putValue(SHORT_DESCRIPTION, "Some short description");
+			putValue(NAME, "SwingAction");
+			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
 		public void actionPerformed(ActionEvent e) {
 		}
-	}
-	private boolean checkPassword(String login, char[] passwd){
-		return DataBaseGet.checkPassword(login, passwd);
 	}
 }
