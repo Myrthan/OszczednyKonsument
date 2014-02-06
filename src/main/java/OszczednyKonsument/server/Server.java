@@ -3,6 +3,7 @@ package OszczednyKonsument.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.sql.Connection;
+import java.util.LinkedList;
 
 import OszczednyKonsument.DataBase.Database;
 import OszczednyKonsument.DataBaseModel.DataBaseGet;

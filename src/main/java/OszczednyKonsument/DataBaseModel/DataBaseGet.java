@@ -19,31 +19,35 @@ public class DataBaseGet {
 	 * @param rf
 	 * @return returns list of objects returned by query
 	 */
-	public static  <T> List<T> select(String query,ReadGetter<T> rg, ReadFilter<T> rf){
-        List<T> container = new LinkedList<T>();
-        try {
-            ResultSet result = Database.getConnection().prepareStatement(query).executeQuery();
-            rg.takeResultSet(result);
-            T ref;
-            while(result.next()) {
-            	ref=rg.read();
-            	if(rf==null || rf.accept(ref))
-            		container.add(ref);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        Database.closeConnection();
-        return container;
+	public static <T> List<T> select(String query, ReadGetter<T> rg,
+			ReadFilter<T> rf) {
+		List<T> container = new LinkedList<T>();
+		try {
+			ResultSet result = Database.getConnection().prepareStatement(query)
+					.executeQuery();
+			rg.takeResultSet(result);
+			T ref;
+			while (result.next()) {
+				ref = rg.read();
+				if (rf == null || rf.accept(ref))
+					container.add(ref);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		Database.closeConnection();
+		return container;
 	}
-	public static List<Produkt> selectProdukty(){
-		return select("select * from produkty", new ReadGetter<Produkt>(){
+
+	public static List<Produkt> selectProdukty() {
+		return select("select * from produkty", new ReadGetter<Produkt>() {
 			@Override
 			public Produkt read() {
 				try {
-					return new Produkt(rs.getInt("id_produkt"),rs.getString("nazwa"),rs.getString("producent"),
-									rs.getString("typ"));
+					return new Produkt(rs.getInt("id_produkt"), rs
+							.getString("nazwa"), rs.getString("producent"), rs
+							.getString("typ"));
 				} catch (SQLException e) {
 					e.printStackTrace();
 					return null;
@@ -51,126 +55,156 @@ public class DataBaseGet {
 			}
 		}, null);
 	}
-	public static List<Opinia> selectOpinie(Integer id_produkt){
-		return select(
-				"select nick,komentarz,ocena from opinie o "
-				+ "join klienci k on o.klient=k.id_klient where o.produkt="+id_produkt.toString()+";"
-				,new ReadGetter<Opinia>(){
-					@Override
-					public Opinia read() {
-						try {
-							return new Opinia(rs.getString("nick"),rs.getString("komentarz"),rs.getInt("ocena"));
-						} catch (SQLException e) {
-							e.printStackTrace();
-							return null;
-						}
-					}
-				},null);
+
+	public static List<Opinia> selectOpinie(Integer id_produkt) {
+		return select("select nick,komentarz,ocena from opinie o "
+				+ "join klienci k on o.klient=k.id_klient where o.produkt="
+				+ id_produkt.toString() + ";", new ReadGetter<Opinia>() {
+			@Override
+			public Opinia read() {
+				try {
+					return new Opinia(rs.getString("nick"), rs
+							.getString("komentarz"), rs.getInt("ocena"));
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		}, null);
 	}
-	public static List<Opinia> selectOpinie(String nazwa_prod){
-		return select(
-				"select nick,komentarz,ocena from opinie o "
+
+	public static List<Opinia> selectOpinie(String nazwa_prod) {
+		return select("select nick,komentarz,ocena from opinie o "
 				+ "join klienci k on o.klient=k.id_klient join produkty p on "
-				+ "o.produkt=p.id_produkt and p.nazwa='"+nazwa_prod+"';"
-				,new ReadGetter<Opinia>(){
+				+ "o.produkt=p.id_produkt and p.nazwa='" + nazwa_prod + "';",
+				new ReadGetter<Opinia>() {
 					@Override
 					public Opinia read() {
 						try {
-							return new Opinia(rs.getString("nick"),rs.getString("komentarz"),rs.getInt("ocena"));
+							return new Opinia(rs.getString("nick"), rs
+									.getString("komentarz"), rs.getInt("ocena"));
 						} catch (SQLException e) {
 							e.printStackTrace();
 							return null;
 						}
 					}
-				},null);
+				}, null);
 	}
-	public static List<Recenzja> selectRecenzje(Integer id_prod){
-		return select("select recenzja, autor from recenzje r where r.id_produkt="+id_prod.toString()+";",
+
+	public static List<Recenzja> selectRecenzje(Integer id_prod) {
+		return select(
+				"select recenzja, autor from recenzje r where r.id_produkt="
+						+ id_prod.toString() + ";", new ReadGetter<Recenzja>() {
+					@Override
+					public Recenzja read() {
+						try {
+							return new Recenzja(rs.getString("recenzja"), rs
+									.getString("autor"));
+						} catch (SQLException e) {
+							e.printStackTrace();
+							return null;
+						}
+					}
+				}, null);
+	}
+
+	public static List<Recenzja> selectRecenzje(String nazwa_prod) {
+		return select(
+				"select recenzja, autor from recenzje r join produkty p on r.id_produkt=p.id_produkt "
+						+ "and p.nazwa='" + nazwa_prod + "';",
 				new ReadGetter<Recenzja>() {
 					@Override
 					public Recenzja read() {
 						try {
-							return new Recenzja(rs.getString("recenzja"),rs.getString("autor"));
+							return new Recenzja(rs.getString("recenzja"), rs
+									.getString("autor"));
 						} catch (SQLException e) {
 							e.printStackTrace();
 							return null;
 						}
 					}
-				}
-				,null);
+				}, null);
 	}
-	public static List<Recenzja> selectRecenzje(String nazwa_prod){
-		return select("select recenzja, autor from recenzje r join produkty p on r.id_produkt=p.id_produkt "
-				+ "and p.nazwa='"+nazwa_prod
-				+"';",
+
+	/*public static List<Recenzja> selectProduktyDoSprzedazy(Integer id_prod) {
+		return select(
+				"select id_pds,cena,id_produ from recenzje r join produkty p on r.id_produkt=p.id_produkt "
+						+ "and p.nazwa='" + nazwa_prod + "';",
 				new ReadGetter<Recenzja>() {
 					@Override
 					public Recenzja read() {
 						try {
-							return new Recenzja(rs.getString("recenzja"),rs.getString("autor"));
+							return new Recenzja(rs.getString("recenzja"), rs
+									.getString("autor"));
 						} catch (SQLException e) {
 							e.printStackTrace();
 							return null;
 						}
 					}
-				}
-				,null);
-	}
-	private static class KlientAuth{
+				}, null);
+	}*/
+
+	private static class KlientAuth {
 		String login;
 		byte[] passwd;
-		public KlientAuth(String login, byte[] passwd){
-			this.login=login;
-			this.passwd=passwd;
+
+		public KlientAuth(String login, byte[] passwd) {
+			this.login = login;
+			this.passwd = passwd;
 		}
 	}
+
 	private static byte[] toBytes(char[] chars) {
-	    CharBuffer charBuffer = CharBuffer.wrap(chars);
-	    ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
-	    byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
-	            byteBuffer.position(), byteBuffer.limit());
-	    Arrays.fill(charBuffer.array(), '\u0000'); // clear sensitive data
-	    Arrays.fill(byteBuffer.array(), (byte) 0); // clear sensitive data
-	    return bytes;
+		CharBuffer charBuffer = CharBuffer.wrap(chars);
+		ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+		byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
+				byteBuffer.position(), byteBuffer.limit());
+		Arrays.fill(charBuffer.array(), '\u0000'); // clear sensitive data
+		Arrays.fill(byteBuffer.array(), (byte) 0); // clear sensitive data
+		return bytes;
 	}
-	public static boolean checkPassword(String login, char[] passwd){
-		List<KlientAuth> myList=select("select nick, hasło from klienci where nick='"+login+"';",
-				new ReadGetter(){
+
+	public static boolean checkPassword(String login, char[] passwd) {
+		List<KlientAuth> myList = select(
+				"select nick, hasło from klienci where nick='" + login + "';",
+				new ReadGetter() {
 					@Override
 					public KlientAuth read() {
 						try {
-							return new KlientAuth(rs.getString("nick"),rs.getBytes("hasło"));
+							return new KlientAuth(rs.getString("nick"), rs
+									.getBytes("hasło"));
 						} catch (SQLException e) {
 							e.printStackTrace();
 							return null;
 						}
 					}
-				}
-				,null);
-		if(myList.size()>0 && Arrays.equals(toBytes(passwd), myList.get(0).passwd))
+				}, null);
+		if (myList.size() > 0
+				&& Arrays.equals(toBytes(passwd), myList.get(0).passwd))
 			return true;
 		return false;
 	}
-	public static boolean checkIfNickExists(String nick){
-		List<Boolean> ans=select("select '"+nick+"' in (select nick from klienci) as x;", 
-		new ReadGetter<Boolean>() {
 
-			@Override
-			public Boolean read() {
-				// TODO Auto-generated method stub
-				try {
-					return rs.getBoolean("x");
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return true;
-			}
-		}, null);
-		if(ans.size()!=0){
+	public static boolean checkIfNickExists(String nick) {
+		List<Boolean> ans = select("select '" + nick
+				+ "' in (select nick from klienci) as x;",
+				new ReadGetter<Boolean>() {
+
+					@Override
+					public Boolean read() {
+						// TODO Auto-generated method stub
+						try {
+							return rs.getBoolean("x");
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return true;
+					}
+				}, null);
+		if (ans.size() != 0) {
 			return ans.get(0);
 		}
 		return false;
 	}
 }
-
