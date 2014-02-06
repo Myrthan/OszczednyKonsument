@@ -23,6 +23,7 @@ public class DataBaseUpdate {
 					.prepareStatement(
 							"insert into klienci values (NULL, ?, ?,"+ wiek+",?,?,?,?,?,?,?);");
 			prepStmt.setString(1, nazwisko);
+			//
 			prepStmt.setString(2, imie);
 			prepStmt.setString(3, adres);
 			prepStmt.setString(4, miasto);
