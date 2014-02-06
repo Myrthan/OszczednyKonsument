@@ -151,5 +151,26 @@ public class DataBaseGet {
 			return true;
 		return false;
 	}
+	public static boolean checkIfNickExists(String nick){
+		List<Boolean> ans=select("select '"+nick+"' in (select nick from klienci) as x;", 
+		new ReadGetter<Boolean>() {
+
+			@Override
+			public Boolean read() {
+				// TODO Auto-generated method stub
+				try {
+					return rs.getBoolean("x");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return true;
+			}
+		}, null);
+		if(ans.size()!=0){
+			return ans.get(0);
+		}
+		return false;
+	}
 }
 
