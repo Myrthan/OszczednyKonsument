@@ -55,23 +55,11 @@ public class ClientApp extends JPanel implements ActionListener {
 	public DataInputStream in;
 
 	
-	public ClientApp(DataInputStream in, DataOutputStream out) {
+	
+	private ClientApp(DataInputStream in, DataOutputStream out) {
 		super(new GridLayout());
 		this.in = in;
 		this.out = out;
-<<<<<<< HEAD
-=======
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				createAndShowGUI();
-			}
-		});
-	}
-	private ClientApp() {
-		super(new GridLayout());
-
-
->>>>>>> branch 'master' of https://github.com/Myrthan/OszczednyKonsument.git
 		selectProdukty = DataBaseGet.selectProdukty();
 
 		for (int i = 0; i < selectProdukty.size(); i++) {
