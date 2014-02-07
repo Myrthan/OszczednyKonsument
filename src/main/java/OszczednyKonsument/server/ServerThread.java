@@ -131,6 +131,7 @@ public class ServerThread extends Thread {
 					Integer ocena;
 					Integer produkt;
 					Integer klient;
+<<<<<<< HEAD
 					komentarz = in.readUTF();
 					ocena = in.readInt();
 					produkt = in.readInt();
@@ -138,6 +139,16 @@ public class ServerThread extends Thread {
 					 * if(this.idKlient==null){ out.close(); in.close(); }
 					 */
 					DataBaseUpdate.insertOpinia(komentarz, ocena, produkt, 1);
+=======
+					komentarz=in.readUTF();
+					ocena=in.readInt();
+					produkt=in.readInt();
+					/*if(this.idKlient==null){
+						out.close();
+						in.close();
+					}*/
+					DataBaseUpdate.insertOpinia(komentarz, ocena, produkt, idKlient);
+>>>>>>> branch 'master' of https://github.com/Myrthan/OszczednyKonsument.git
 					out.writeUTF("A");
 					out.flush();
 					break;
