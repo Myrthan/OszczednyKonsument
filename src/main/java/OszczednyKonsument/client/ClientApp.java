@@ -162,7 +162,15 @@ public class ClientApp extends JPanel implements ActionListener {
 			List<SerachResult> serachRes = DataBaseGet.serachQuery(w);
 			if(serachRes.size() > 0)
 				System.out.println(serachRes.get(0).id_sklep + " " + serachRes.get(0).resultSum);
+			JFrame frame2 = new JFrame("Oszczedny Konsument");
+			frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame2.getContentPane().setLayout(
+					new BoxLayout(frame2.getContentPane(), BoxLayout.Y_AXIS));
+
+			ShowResult newContentPane = new ShowResult(in,out);
 			
+			frame2.pack();
+			frame2.setVisible(true);
 		} else if (command.equals("Wyczysc liste zakupow")) {
 			dataKoszyk.clear();
 			modelKoszyk.fireTableDataChanged();

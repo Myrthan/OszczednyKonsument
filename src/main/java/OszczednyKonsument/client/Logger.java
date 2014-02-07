@@ -58,6 +58,7 @@ public class Logger extends JPanel {
 	private final Action action = new SwingAction();
 	DataOutputStream out;
 	DataInputStream in;
+	private final Action action_1 = new SwingAction_1();
 
 	public Logger(DataInputStream in, DataOutputStream out) {
 		this.in=in;
@@ -130,6 +131,20 @@ public class Logger extends JPanel {
 		add(btnZalogujSi, gbc_btnZalogujSi);
 		
 		JButton btnRejestracja = new JButton("Rejestracja");
+		btnRejestracja.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						Register.createAndShowGUI(Logger.this.in,Logger.this.out);
+						JFrame parrent=(JFrame) SwingUtilities.getWindowAncestor(Logger.this);
+						parrent.removeAll();
+						parrent.setVisible(false);
+					}
+				});
+			}
+		});
+		btnRejestracja.setAction(action_1);
 		GridBagConstraints gbc_btnRejestracja = new GridBagConstraints();
 		gbc_btnRejestracja.gridx = 1;
 		gbc_btnRejestracja.gridy = 4;
@@ -266,6 +281,14 @@ public class Logger extends JPanel {
 	private class SwingAction extends AbstractAction {
 		public SwingAction() {
 			putValue(NAME, "SwingAction");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+		}
+	}
+	private class SwingAction_1 extends AbstractAction {
+		public SwingAction_1() {
+			putValue(NAME, "Rejestracja");
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
 		public void actionPerformed(ActionEvent e) {

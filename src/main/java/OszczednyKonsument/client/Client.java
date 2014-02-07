@@ -21,7 +21,7 @@ public class Client {
 		//net();
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				ClientApp.createAndShowGUI();
+				//ClientApp.createAndShowGUI(in,out);
 			}
 		});
 		

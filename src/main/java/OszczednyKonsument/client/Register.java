@@ -54,6 +54,7 @@ public class Register extends JPanel {
 	private JTextField textField_nazw;
 	DataOutputStream out;
 	DataInputStream in;
+	private final Action action_1 = new SwingAction_1();
 	public Register(	DataInputStream in,DataOutputStream out) {
 		this.in=in;
 		this.out=out;
@@ -242,8 +243,13 @@ public class Register extends JPanel {
 		add(btnZarejestrujSi, gbc_btnZarejestrujSi);
 		
 		JButton btnPowr = new JButton("Logowanie");
+		btnPowr.setAction(action_1);
 		btnPowr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Logger.createAndShowGUI(Register.this.in,Register.this.out);
+				JFrame parrent=(JFrame) SwingUtilities.getWindowAncestor(Register.this);
+				parrent.removeAll();
+				parrent.setVisible(false);
 			}
 		});
 		GridBagConstraints gbc_btnPowr = new GridBagConstraints();
@@ -407,5 +413,13 @@ public class Register extends JPanel {
 			e.printStackTrace();
 		}
 		return true;
+	}
+	private class SwingAction_1 extends AbstractAction {
+		public SwingAction_1() {
+			putValue(NAME, "Logowanie");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+		}
 	}
 }
