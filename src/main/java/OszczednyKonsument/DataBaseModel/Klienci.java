@@ -4,7 +4,7 @@ package OszczednyKonsument.DataBaseModel;
  * @author myrthan
  *
  */
-public class klienci {
+public class Klienci {
 	private int id;
 	private String nazwisko;
 	private String imie;
@@ -18,13 +18,13 @@ public class klienci {
 	/**
 	 * 
 	 */
-	public klienci() {}
+	public Klienci() {}
     /**
      * @param id
      * @param nazwisko
      * @param imie
      */
-    public klienci(int id,String nazwisko,String imie) {
+    public Klienci(int id,String nazwisko,String imie) {
         this.id = id;
         this.nazwisko = nazwisko;
         this.imie = imie;

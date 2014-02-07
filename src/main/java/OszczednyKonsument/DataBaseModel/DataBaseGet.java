@@ -56,6 +56,25 @@ public class DataBaseGet {
 		}, null);
 	}
 
+	public static List<Sklep> selectSklepy() {
+		return select("select * from sklepy", new ReadGetter<Sklep>() {
+			@Override
+			public Sklep read() {
+				try {
+					return new Sklep(rs.getInt("id_sklep"), rs
+							.getString("nazwa"), rs.getString("adres"), rs
+							.getString("miasto"), rs.getString("kod_pocztowy"),
+							rs.getString("godziny_otwarcia"), rs
+									.getString("numer_kontaktowy"), rs
+									.getString("wlasciciel"));
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		}, null);
+	}
+
 	public static List<Opinia> selectOpinie(Integer id_produkt) {
 		return select("select nick,komentarz,ocena,data from opinie o "
 				+ "join klienci k on o.klient=k.id_klient where o.produkt="
@@ -64,7 +83,8 @@ public class DataBaseGet {
 			public Opinia read() {
 				try {
 					return new Opinia(rs.getString("nick"), rs
-							.getString("komentarz"), rs.getInt("ocena"),rs.getTimestamp("data"));
+							.getString("komentarz"), rs.getInt("ocena"), rs
+							.getTimestamp("data"));
 				} catch (SQLException e) {
 					e.printStackTrace();
 					return null;
@@ -82,7 +102,8 @@ public class DataBaseGet {
 					public Opinia read() {
 						try {
 							return new Opinia(rs.getString("nick"), rs
-									.getString("komentarz"), rs.getInt("ocena"), rs.getTimestamp("data"));
+									.getString("komentarz"),
+									rs.getInt("ocena"), rs.getTimestamp("data"));
 						} catch (SQLException e) {
 							e.printStackTrace();
 							return null;
@@ -126,23 +147,33 @@ public class DataBaseGet {
 				}, null);
 	}
 
-	/*public static List<Recenzja> selectProduktyDoSprzedazy(Integer id_prod) {
+	public static List<SerachResult> serachQuery(Integer[] prod) {
+		int size = prod.length;
+		String localString= "";
+		for (int i = 0; i < size - 1; i++)
+			localString += prod[i].toString() + ",";
+		localString += prod[size - 1].toString();
+		System.out.println(localString);
+		System.out.println(prod.length);
 		return select(
-				"select id_pds,cena,id_produ from recenzje r join produkty p on r.id_produkt=p.id_produkt "
-						+ "and p.nazwa='" + nazwa_prod + "';",
-				new ReadGetter<Recenzja>() {
+				"select id_sklepu,sum(cena) from \"produkty_do_sprzedaży\" "
+						+ "join sklepy on id_sklep = id_sklepu where id_produktu in ("
+						+ localString + ") "
+						+ "group by id_sklepu having count(id_produktu) = " + size +  " ;"
+
+				, new ReadGetter<SerachResult>() {
 					@Override
-					public Recenzja read() {
+					public SerachResult read() {
 						try {
-							return new Recenzja(rs.getString("recenzja"), rs
-									.getString("autor"));
+							return new SerachResult(rs.getInt("id_sklepu"), rs
+									.getDouble("sum"));
 						} catch (SQLException e) {
 							e.printStackTrace();
 							return null;
 						}
 					}
 				}, null);
-	}*/
+	}
 
 	private static class KlientAuth {
 		Integer id_klient;

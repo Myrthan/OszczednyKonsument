@@ -1,8 +1,10 @@
 package OszczednyKonsument.client;
 
 import javax.swing.AbstractButton;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,10 +18,16 @@ import javax.swing.table.AbstractTableModel;
 import OszczednyKonsument.DataBase.Database;
 import OszczednyKonsument.DataBaseModel.DataBaseGet;
 import OszczednyKonsument.DataBaseModel.Produkt;
+import OszczednyKonsument.DataBaseModel.SerachResult;
+import OszczednyKonsument.DataBaseModel.Sklep;
 
 import java.awt.Button;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -31,6 +39,7 @@ import java.sql.Connection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class ClientApp extends JPanel implements ActionListener {
 	private boolean DEBUG = false;
@@ -45,10 +54,10 @@ public class ClientApp extends JPanel implements ActionListener {
 	DataOutputStream out;
 
 	public ClientApp() {
-		super(new GridLayout(1, 0));
+		super(new GridLayout());
 
-		// TEST dla produktow
-		selectProdukty = selectProdukty();
+
+		selectProdukty = DataBaseGet.selectProdukty();
 
 		for (int i = 0; i < selectProdukty.size(); i++) {
 			data.add(selectProdukty.get(i).toObject());
@@ -58,7 +67,7 @@ public class ClientApp extends JPanel implements ActionListener {
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		table.setPreferredScrollableViewportSize(new Dimension(
-				screenSize.width, screenSize.height / 2));
+				screenSize.width / 6, screenSize.height / 2));
 		table.setFillsViewportHeight(true);
 		table.setAutoCreateRowSorter(true);
 		table.getSelectionModel().addListSelectionListener(new RowListener());
@@ -66,15 +75,16 @@ public class ClientApp extends JPanel implements ActionListener {
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JButton b1 = new JButton("Dodaj produkt do koszyka");
+		JButton b1 = new JButton("Dodaj do koszyka");
 		b1.setVerticalTextPosition(AbstractButton.BOTTOM);
 		b1.setHorizontalTextPosition(AbstractButton.LEFT);
 		b1.setMnemonic(KeyEvent.VK_M);
 		b1.addActionListener(this);
-		JLabel label = new JLabel("Image and Text", JLabel.CENTER);
+
+		JLabel label = new JLabel("Menu", JLabel.CENTER);
 		label.setVerticalTextPosition(JLabel.BOTTOM);
 		label.setHorizontalTextPosition(JLabel.CENTER);
-
+		// add(label);
 		JButton b2 = new JButton("Wyszukaj");
 		b2.setVerticalTextPosition(AbstractButton.BOTTOM);
 		b2.setHorizontalTextPosition(AbstractButton.LEFT);
@@ -92,20 +102,45 @@ public class ClientApp extends JPanel implements ActionListener {
 		b4.setHorizontalTextPosition(AbstractButton.CENTER);
 		b4.setMnemonic(KeyEvent.VK_M);
 		b4.addActionListener(this);
-		
+
+		JButton b5 = new JButton("Opinie");
+		b5.setVerticalTextPosition(AbstractButton.VERTICAL);
+		b5.setHorizontalTextPosition(AbstractButton.CENTER);
+		b5.setMnemonic(KeyEvent.VK_M);
+		b5.addActionListener(this);
+
+		JButton b6 = new JButton("Recenzje");
+		b6.setVerticalTextPosition(AbstractButton.VERTICAL);
+		b6.setHorizontalTextPosition(AbstractButton.CENTER);
+		b6.setMnemonic(KeyEvent.VK_M);
+		b6.addActionListener(this);
+
 		JPanel panel = new JPanel();
-		panel.add(b1);
-		panel.add(b2);
-		panel.add(b3);
-		panel.add(b4);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		JPanel firstPanel = new JPanel();
+	    firstPanel.setLayout(new GridLayout(4, 4));
+	    firstPanel.setMaximumSize(new Dimension(400, 400));
+		b1.setAlignmentX(Component.CENTER_ALIGNMENT);
+		b2.setAlignmentX(Component.CENTER_ALIGNMENT);
+		b3.setAlignmentX(Component.CENTER_ALIGNMENT);
+		b4.setAlignmentX(Component.CENTER_ALIGNMENT);
+		b5.setAlignmentX(Component.CENTER_ALIGNMENT);
+		b6.setAlignmentX(Component.CENTER_ALIGNMENT);
+		firstPanel.add(b1);
+		firstPanel.add(b2);
+		firstPanel.add(b3);
+		firstPanel.add(b4);
+		firstPanel.add(b5);
+		firstPanel.add(b6);
 		panel.setOpaque(false);
+		panel.add(firstPanel);
 		add(panel);
 		modelKoszyk = new Koszyk(dataKoszyk);
 		JTable koszyk = new JTable(modelKoszyk);
-		add(koszyk);
 		koszyk.setFillsViewportHeight(true);
 		koszyk.setAutoCreateRowSorter(true);
 		koszyk.getSelectionModel().addListSelectionListener(new RowListener2());
+		add(koszyk);
 
 	}
 
@@ -116,17 +151,27 @@ public class ClientApp extends JPanel implements ActionListener {
 
 	public void actionPerformed(ActionEvent event) {
 		String command = event.getActionCommand();
-		if (command.equals("Dodaj produkt do koszyka")) {
+		if (command.equals("Dodaj do koszyka")) {
 			if (currentChoosed < 0)
 				return;
 			dataKoszyk.add(data.get(currentChoosed));
 			modelKoszyk.fireTableDataChanged();
 		} else if (command.equals("Wyszukaj")) {
+			Integer[] w = new Integer[dataKoszyk.size()];
+			if(w.length == 0)
+				return;
+			for(int i = 0; i < dataKoszyk.size(); i ++)
+				w[i] = (Integer) dataKoszyk.get(i)[0];
+			List<SerachResult> serachRes = DataBaseGet.serachQuery(w);
+			if(serachRes.size() > 0)
+				System.out.println(serachRes.get(0).id_sklep + " " + serachRes.get(0).resultSum);
 			
 		} else if (command.equals("Wyczysc liste zakupow")) {
 			dataKoszyk.clear();
 			modelKoszyk.fireTableDataChanged();
 		} else if (command.equals("Usun")) {
+			if (currentChoosed2 < 0)
+				return;
 			dataKoszyk.remove(currentChoosed2);
 			modelKoszyk.fireTableDataChanged();
 		}
@@ -141,6 +186,7 @@ public class ClientApp extends JPanel implements ActionListener {
 			}
 		}
 	}
+
 	private class RowListener2 implements ListSelectionListener {
 		public void valueChanged(ListSelectionEvent event) {
 			ListSelectionModel lsm = (ListSelectionModel) event.getSource();
@@ -150,6 +196,7 @@ public class ClientApp extends JPanel implements ActionListener {
 			}
 		}
 	}
+
 	class SerachList extends AbstractTableModel {
 
 		private String[] columnNames = { "ID", "Nazwa", "Producent", "Typ" };
@@ -228,8 +275,8 @@ public class ClientApp extends JPanel implements ActionListener {
 		}
 
 		public Object getValueAt(int row, int col) {
-			if(dataModel.size() == 0)
-					return 0;
+			if (dataModel.size() == 0)
+				return 0;
 			return dataModel.get(row)[col];
 		}
 
@@ -259,6 +306,8 @@ public class ClientApp extends JPanel implements ActionListener {
 	public static void createAndShowGUI() {
 		JFrame frame = new JFrame("Oszczedny Konsument");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(
+				new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
 		ClientApp newContentPane = new ClientApp();
 		newContentPane.setOpaque(true); // content panes must be opaque
