@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 
 public class ProduktyDoSprzedazy {
 	public Integer id_pds;
-	public BigDecimal cena;
+	public Double cena;
 	public Integer id_produktu;
 	public Integer id_sklepu;
-	public ProduktyDoSprzedazy(Integer Id,BigDecimal cena,Integer id_produktu,Integer id_sklepu){
+	public ProduktyDoSprzedazy(Integer Id,Double cena,Integer id_produktu,Integer id_sklepu){
 		this.id_pds=Id;
 		this.cena=cena;
 		this.id_produktu=id_produktu;
