@@ -158,7 +158,6 @@ public class ServerThread extends Thread {
 					out.writeInt(selectProdukty.get(0).size);
 					out.flush();
 					for (Produkt r : selectProdukty) {
-						System.out.println(r.id_produkt + " " + r.nazwa + " " + r.producent);
 						out.writeUTF(r.id_produkt.toString());
 						out.flush();
 						out.writeUTF(r.nazwa);
@@ -183,7 +182,7 @@ public class ServerThread extends Thread {
 					out.writeInt(serachRes.size());
 					out.flush();
 					for(int i = 0; i < size2;i++) {
-						out.writeDouble(serachRes.get(i).id_sklep);
+						out.writeInt(serachRes.get(i).id_sklep);
 						out.flush();
 						out.writeDouble(serachRes.get(i).resultSum);
 						out.flush();
