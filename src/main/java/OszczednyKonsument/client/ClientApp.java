@@ -70,7 +70,7 @@ public class ClientApp extends JPanel implements ActionListener {
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JButton b1 = new JButton("Dodaj produkt do koszyka");
+		JButton b1 = new JButton("Dodaj do koszyka");
 		b1.setVerticalTextPosition(AbstractButton.BOTTOM);
 		b1.setHorizontalTextPosition(AbstractButton.LEFT);
 		b1.setMnemonic(KeyEvent.VK_M);
@@ -112,45 +112,50 @@ public class ClientApp extends JPanel implements ActionListener {
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		JPanel firstPanel = new JPanel();
+	    firstPanel.setLayout(new GridLayout(4, 4));
+	    firstPanel.setMaximumSize(new Dimension(400, 400));
 		b1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		b2.setAlignmentX(Component.CENTER_ALIGNMENT);
 		b3.setAlignmentX(Component.CENTER_ALIGNMENT);
 		b4.setAlignmentX(Component.CENTER_ALIGNMENT);
 		b5.setAlignmentX(Component.CENTER_ALIGNMENT);
 		b6.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-		panel.add(b1);
-		panel.add(b2);
-		panel.add(b3);
-		panel.add(b4);
-		panel.add(b5);
-		panel.add(b6);
+		firstPanel.add(b1);
+		firstPanel.add(b2);
+		firstPanel.add(b3);
+		firstPanel.add(b4);
+		firstPanel.add(b5);
+		firstPanel.add(b6);
 		panel.setOpaque(false);
-
+		panel.add(firstPanel);
 		add(panel);
 		modelKoszyk = new Koszyk(dataKoszyk);
 		JTable koszyk = new JTable(modelKoszyk);
-		add(koszyk);
 		koszyk.setFillsViewportHeight(true);
 		koszyk.setAutoCreateRowSorter(true);
 		koszyk.getSelectionModel().addListSelectionListener(new RowListener2());
+		add(koszyk);
 
 	}
 
 	public void actionPerformed(ActionEvent event) {
 		String command = event.getActionCommand();
-		if (command.equals("Dodaj produkt do koszyka")) {
+		if (command.equals("Dodaj do koszyka")) {
 			if (currentChoosed < 0)
 				return;
 			dataKoszyk.add(data.get(currentChoosed));
 			modelKoszyk.fireTableDataChanged();
 		} else if (command.equals("Wyszukaj")) {
 			Integer[] w = new Integer[dataKoszyk.size()];
+			if(w.length == 0)
+				return;
 			for(int i = 0; i < dataKoszyk.size(); i ++)
 				w[i] = (Integer) dataKoszyk.get(i)[0];
 			List<SerachResult> serachRes = DataBaseGet.serachQuery(w);
 			if(serachRes.size() > 0)
 				System.out.println(serachRes.get(0).id_sklep + " " + serachRes.get(0).resultSum);
+			
 		} else if (command.equals("Wyczysc liste zakupow")) {
 			dataKoszyk.clear();
 			modelKoszyk.fireTableDataChanged();
