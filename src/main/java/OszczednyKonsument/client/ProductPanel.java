@@ -80,6 +80,7 @@ public class ProductPanel extends JPanel {
 		List<Recenzja> list=new LinkedList<Recenzja>();
 		try{
 			out.writeUTF("RECENZJE");
+			out.flush();
 			out.writeInt(produktId);
 			int size=in.readInt();
 			for(int i=0; i<size; ++i){
@@ -98,6 +99,7 @@ public class ProductPanel extends JPanel {
 		List<Opinia> opinie= new LinkedList<Opinia>();
 		try{
 			out.writeUTF("OPINIE");
+			out.flush();
 			out.writeInt(produktId);
 			out.flush();
 			int size=in.readInt();
@@ -187,9 +189,14 @@ public class ProductPanel extends JPanel {
 	void commitOpinia(String comment, Integer mark){
 		try {
 			out.writeUTF("INSERTOPINIA");
+			out.flush();
 			out.writeUTF(comment);
+			out.flush();
 			out.writeInt(mark);
+			out.flush();
 			out.writeInt(idProduktu);
+			out.flush();
+			in.readUTF();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

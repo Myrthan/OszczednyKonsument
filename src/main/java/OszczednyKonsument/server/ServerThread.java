@@ -117,11 +117,13 @@ public class ServerThread extends Thread {
 					komentarz=in.readUTF();
 					ocena=in.readInt();
 					produkt=in.readInt();
-					if(this.idKlient==null){
+					/*if(this.idKlient==null){
 						out.close();
 						in.close();
-					}
-					DataBaseUpdate.insertOpinia(komentarz, ocena, produkt, idKlient);
+					}*/
+					DataBaseUpdate.insertOpinia(komentarz, ocena, produkt, 1);
+					out.writeUTF("A");
+					out.flush();
 				break;
 				}
 			}
