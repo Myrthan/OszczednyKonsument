@@ -178,7 +178,15 @@ public class ServerThread extends Thread {
 					for(int i = 0; i < size; i ++)
 						w[i] = in.readInt();
 					List<SerachResult> serachRes = DataBaseGet.serachQuery(w);
-					
+					int size2 = serachRes.size();
+					out.writeInt(serachRes.size());
+					out.flush();
+					for(int i = 0; i < size2;i++) {
+						out.writeDouble(serachRes.get(i).id_sklep);
+						out.flush();
+						out.writeDouble(serachRes.get(i).resultSum);
+						out.flush();
+					}
 					break;
 				}
 			}

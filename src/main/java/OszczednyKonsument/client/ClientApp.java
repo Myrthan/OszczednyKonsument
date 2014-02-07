@@ -71,7 +71,7 @@ public class ClientApp extends JPanel implements ActionListener {
 		this.in = in;
 		this.out = out;
 		try {
-			out.writeUTF("SELECTPRODUKTY");
+			out.writeUTF("SELECT_PRODUKTY");
 			out.flush();
 
 			int size = in.readInt();
@@ -139,7 +139,6 @@ public class ClientApp extends JPanel implements ActionListener {
 		b4.addActionListener(this);
 
 		JButton b5 = new JButton("Opinie");
-		b5.setAction(action);
 		b5.setVerticalTextPosition(AbstractButton.VERTICAL);
 		b5.setHorizontalTextPosition(AbstractButton.CENTER);
 		b5.setMnemonic(KeyEvent.VK_M);
@@ -179,9 +178,14 @@ public class ClientApp extends JPanel implements ActionListener {
 		add(koszyk);
 
 	}
-
+	public class xx{
+		Double sum;
+		Integer id;
+	}
 	public void actionPerformed(ActionEvent event) {
 		String command = event.getActionCommand();
+		List<xx> serachRes = new LinkedList<xx>();
+
 		if (command.equals("Dodaj do koszyka")) {
 			if (currentChoosed < 0)
 				return;
@@ -202,12 +206,17 @@ public class ClientApp extends JPanel implements ActionListener {
 					out.writeInt(r);
 					out.flush();
 				}
-
+				int size2 = in.readInt();
+				for(int i =0; i < size2; i++){
+					serachRes.add(new xx());
+					serachRes.get(i).id = in.readInt();
+					serachRes.get(i).sum = in.readDouble();
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			List<SerachResult> serachRes = null;
+			//List<SerachResult> serachRes = null;
 			// DataBaseGet.serachQuery(w);
 
 			/*
@@ -222,9 +231,9 @@ public class ClientApp extends JPanel implements ActionListener {
 			 */
 			if (serachRes.size() > 0)
 				JOptionPane.showMessageDialog(frame, new String(
-						"TWOJ SKLEP MA ID: " + serachRes.get(0).id_sklep
+						"TWOJ SKLEP MA ID: " + serachRes.get(0).id
 								+ " KOSZT ZAKUPOW:"
-								+ serachRes.get(0).resultSum));
+								+ serachRes.get(0).sum));
 			else
 				JOptionPane
 						.showMessageDialog(
@@ -391,14 +400,18 @@ public class ClientApp extends JPanel implements ActionListener {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				SSLSocket socket;
-				System.setProperty("javax.net.ssl.trustStore","LsKeystore");
-	    		System.setProperty("javax.net.ssl.trustStorePassword","admin12");
+				System.setProperty("javax.net.ssl.trustStore", "LsKeystore");
+				System.setProperty("javax.net.ssl.trustStorePassword",
+						"admin12");
 				Integer portNr = 30002;
-				SSLSocketFactory mySocketFactory=(SSLSocketFactory)SSLSocketFactory.getDefault();
+				SSLSocketFactory mySocketFactory = (SSLSocketFactory) SSLSocketFactory
+						.getDefault();
 				try {
-					socket=(SSLSocket)mySocketFactory.createSocket("localhost", portNr);
-					Logger.createAndShowGUI(new DataInputStream(socket.getInputStream()),
-					new DataOutputStream(socket.getOutputStream()));
+					socket = (SSLSocket) mySocketFactory.createSocket(
+							"localhost", portNr);
+					Logger.createAndShowGUI(
+							new DataInputStream(socket.getInputStream()),
+							new DataOutputStream(socket.getOutputStream()));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -406,17 +419,21 @@ public class ClientApp extends JPanel implements ActionListener {
 			}
 		});
 	}
+
 	private class SwingAction extends AbstractAction {
 		public SwingAction() {
 			putValue(NAME, "Opinie");
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
+
 		public void actionPerformed(ActionEvent e) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					if(currentChoosed!=-1)
-						ProductPanel.createAndShowGUI(selectProdukty.get(currentChoosed).id_produkt, in, out);
+					if (currentChoosed != -1)
+						ProductPanel.createAndShowGUI(
+								selectProdukty.get(currentChoosed).id_produkt,
+								in, out);
 				}
 			});
 		}
