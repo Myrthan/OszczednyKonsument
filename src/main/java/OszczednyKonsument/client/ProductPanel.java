@@ -185,7 +185,16 @@ public class ProductPanel extends JPanel {
 		}
 	}
 	void commitOpinia(String comment, Integer mark){
-		DataBaseUpdate.insertOpinia(comment, mark, idProduktu, idKlienta);
+		try {
+			out.writeUTF("INSERTOPINIA");
+			out.writeUTF(comment);
+			out.writeInt(mark);
+			out.writeInt(idProduktu);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	private void refresh(){
 		removeAll();

@@ -21,6 +21,7 @@ import OszczednyKonsument.DataBaseModel.Recenzja;
 public class ServerThread extends Thread {
 	Socket socket;
 	String login;
+	Integer idKlient;
 	ServerThread(Socket socket){
 		this.socket=socket;
 	}
@@ -40,6 +41,9 @@ public class ServerThread extends Thread {
 					String login=in.readUTF();
 					char[] pass =in.readUTF().toCharArray();
 					int b=DataBaseGet.checkPassword(login, pass);
+					if(b!=-1){
+						idKlient=b;
+					}
 					out.writeBoolean(b!=-1);
 					out.flush();
 					if(b!=-1){
@@ -68,10 +72,11 @@ public class ServerThread extends Thread {
 					if(wiek.equals(-1)) wiek=null;
 					if(adres.equals("")) adres=null;
 					if(miasto.equals("")) miasto=null;
+					boolean be;
 					if(kod_pocztowy.equals("")) kod_pocztowy=null;
-					b=DataBaseUpdate.insertKlient(imie, nazwisko, wiek, adres, miasto, kod_pocztowy, nick, new Date(-1),
+					be=DataBaseUpdate.insertKlient(imie, nazwisko, wiek, adres, miasto, kod_pocztowy, nick, new Date(-1),
 							new String(haslo), email);
-					out.writeBoolean(b);
+					out.writeBoolean(be);
 				break;
 				case "RECENZJE":
 					//System.out.println("wisze");
@@ -112,7 +117,11 @@ public class ServerThread extends Thread {
 					komentarz=in.readUTF();
 					ocena=in.readInt();
 					produkt=in.readInt();
-					
+					if(this.idKlient==null){
+						out.close();
+						in.close();
+					}
+					DataBaseUpdate.insertOpinia(komentarz, ocena, produkt, idKlient);
 				break;
 				}
 			}

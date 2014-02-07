@@ -145,10 +145,12 @@ public class DataBaseGet {
 	}*/
 
 	private static class KlientAuth {
+		Integer id_klient;
 		String login;
 		byte[] passwd;
 
-		public KlientAuth(String login, byte[] passwd) {
+		public KlientAuth(Integer id,String login, byte[] passwd) {
+			this.id_klient=id;
 			this.login = login;
 			this.passwd = passwd;
 		}
@@ -164,14 +166,14 @@ public class DataBaseGet {
 		return bytes;
 	}
 
-	public static boolean checkPassword(String login, char[] passwd) {
+	public static Integer checkPassword(String login, char[] passwd) {
 		List<KlientAuth> myList = select(
-				"select nick, hasło from klienci where nick='" + login + "';",
+				"select id_klient,nick, hasło from klienci where nick='" + login + "';",
 				new ReadGetter() {
 					@Override
 					public KlientAuth read() {
 						try {
-							return new KlientAuth(rs.getString("nick"), rs
+							return new KlientAuth(rs.getInt("id_klient"),rs.getString("nick"), rs
 									.getBytes("hasło"));
 						} catch (SQLException e) {
 							e.printStackTrace();
@@ -181,11 +183,11 @@ public class DataBaseGet {
 				}, null);
 		if (myList.size() > 0
 				&& Arrays.equals(toBytes(passwd), myList.get(0).passwd))
-			return true;
-		return false;
+			return myList.get(0).id_klient;
+		return -1;
 	}
 
-	public static int checkIfNickExists(String nick) {
+	public static boolean checkIfNickExists(String nick) {
 		List<Boolean> ans = select("select '" + nick
 				+ "' in (select nick from klienci) as x;",
 				new ReadGetter<Boolean>() {
@@ -203,7 +205,7 @@ public class DataBaseGet {
 					}
 				}, null);
 		if (ans.size() != 0) {
-			return ans.get(0).;
+			return ans.get(0);
 		}
 		return false;
 	}
