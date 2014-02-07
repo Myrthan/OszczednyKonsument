@@ -65,7 +65,8 @@ public class ClientApp extends JPanel implements ActionListener {
 	private static JFrame frame;
 	public DataOutputStream out;
 	public DataInputStream in;
-
+	public Action action=new SwingAction();
+	
 	private ClientApp(DataInputStream in, DataOutputStream out) {
 		super(new GridLayout());
 		this.in = in;
@@ -146,7 +147,7 @@ System.out.println("AHAH");
 		b4.addActionListener(this);
 
 		JButton b5 = new JButton("Opinie");
-		//b5.setA
+		b5.setAction(action);
 		b5.setVerticalTextPosition(AbstractButton.VERTICAL);
 		b5.setHorizontalTextPosition(AbstractButton.CENTER);
 		b5.setMnemonic(KeyEvent.VK_M);
@@ -439,10 +440,12 @@ System.out.println("AHAH");
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					if (currentChoosed != -1)
+					if (currentChoosed != -1){
+						System.out.println("here");
 						ProductPanel.createAndShowGUI(
-								selectProdukty.get(currentChoosed).id_produkt,
+								new Integer( (String)((data.get(currentChoosed)[0]))),
 								in, out);
+					}
 				}
 			});
 		}
