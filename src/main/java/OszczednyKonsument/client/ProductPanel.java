@@ -54,14 +54,12 @@ import javax.swing.Action;
 
 public class ProductPanel extends JPanel {
 	private JTextField mark;
-	private String nick;
 	private Integer idProduktu;
 	private Integer idKlienta;
 	private JTextPane comment;
 	private final Action action = new SwingAction();
-	public ProductPanel(Integer produktId, String nick, Integer idKlienta) {
+	public ProductPanel(Integer produktId, Integer idKlienta) {
 		this.idKlienta=idKlienta;
-		this.nick=nick;
 		this.idProduktu=produktId;
 		refresh();
 	}
@@ -81,7 +79,7 @@ public class ProductPanel extends JPanel {
 		JFrame frame = new JFrame("Oszczedny Konsument");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		ProductPanel newContentPane = new ProductPanel(i,nick,2);
+		ProductPanel newContentPane = new ProductPanel(i,2);
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
 		frame.pack();
