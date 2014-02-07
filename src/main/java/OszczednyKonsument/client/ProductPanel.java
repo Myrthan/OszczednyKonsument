@@ -208,7 +208,7 @@ public class ProductPanel extends JPanel {
 		List<Opinia> opinie= getOpinieList(idProduktu);
 		List<Recenzja> recenzje=getRecenzjeList(idProduktu);
 		setLayout(new GridLayout(1, 0, 0, 0));
-		Integer sum=0;
+		
 		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane);
 		
@@ -239,14 +239,11 @@ public class ProductPanel extends JPanel {
 				txtpn.setEditable(false);
 			}
 		}
-		Integer count=0;
+
 		for(Opinia o: opinie){
 			JScrollPane scrollPane_2 = new JScrollPane();
 			panel.add(scrollPane_2);
-			if(o.ocena!=null){
-				sum+=o.ocena;
-				count+=1;
-			}
+			
 			JTextPane txtpn1 = new JTextPane();
 			txtpn1.setText(o.komentarz);
 			scrollPane_2.setViewportView(txtpn1);

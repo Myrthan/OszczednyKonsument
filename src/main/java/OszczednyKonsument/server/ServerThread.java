@@ -131,13 +131,6 @@ public class ServerThread extends Thread {
 					Integer ocena;
 					Integer produkt;
 					Integer klient;
-					komentarz = in.readUTF();
-					ocena = in.readInt();
-					produkt = in.readInt();
-					/*
-					 * if(this.idKlient==null){ out.close(); in.close(); }
-					 */
-					DataBaseUpdate.insertOpinia(komentarz, ocena, produkt, 1);
 					komentarz=in.readUTF();
 					ocena=in.readInt();
 					produkt=in.readInt();
