@@ -1,0 +1,8 @@
+Oszczedny Konsument
+
+Celem twórców była aplikacja która pozwalała by użytkownikowi czyli tytułowemu "Oszczędnemu Konsumentowi" 
+na zaoszczędzeniu czasu przy planowaniu zakupów. Aplikacja pozwala na skomponowanie użytkownikowi dowolnej
+listy zakupów z produktów dostępnych w bazie danych, a następnie proponuje najlepszy sklep do dokonania
+takich zakupów oraz koszt . Użytkownik może również zapoznać się z opiniami konsumentów na temat produktów oraz nawet 
+samemu wyrazić swoją opinie. Również jest możliwość zapoznania się z opiniami fachowców dzięki przechowywanym
+w bazie danych Recenzjach.   
