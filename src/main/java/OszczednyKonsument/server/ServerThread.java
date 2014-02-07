@@ -121,7 +121,7 @@ public class ServerThread extends Thread {
 						out.close();
 						in.close();
 					}*/
-					DataBaseUpdate.insertOpinia(komentarz, ocena, produkt, 1);
+					DataBaseUpdate.insertOpinia(komentarz, ocena, produkt, idKlient);
 					out.writeUTF("A");
 					out.flush();
 				break;
