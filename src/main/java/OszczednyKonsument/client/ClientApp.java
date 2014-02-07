@@ -33,6 +33,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.sql.Connection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -48,8 +50,19 @@ public class ClientApp extends JPanel implements ActionListener {
 	private Koszyk modelKoszyk;
 	private int currentChoosed = -1;
 	private int currentChoosed2 = -1;
+	public DataOutputStream out;
+	public DataInputStream in;
 
-	public ClientApp() {
+	public ClientApp(DataInputStream in, DataOutputStream out) {
+		this.in = in;
+		this.out = out;
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				createAndShowGUI();
+			}
+		});
+	}
+	private ClientApp() {
 		super(new GridLayout());
 
 		selectProdukty = DataBaseGet.selectProdukty();
