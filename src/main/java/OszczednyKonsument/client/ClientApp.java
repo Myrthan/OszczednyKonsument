@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -35,11 +36,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class ClientApp extends JPanel implements ActionListener {
 	private boolean DEBUG = false;
@@ -50,21 +56,41 @@ public class ClientApp extends JPanel implements ActionListener {
 	private Koszyk modelKoszyk;
 	private int currentChoosed = -1;
 	private int currentChoosed2 = -1;
-
+	private static JFrame frame;
 	public DataOutputStream out;
 	public DataInputStream in;
 
-	
-	
 	private ClientApp(DataInputStream in, DataOutputStream out) {
 		super(new GridLayout());
 		this.in = in;
 		this.out = out;
-		selectProdukty = DataBaseGet.selectProdukty();
+		try {
+			out.writeUTF("SELECTPRODUKTY");
+			out.flush();
 
-		for (int i = 0; i < selectProdukty.size(); i++) {
-			data.add(selectProdukty.get(i).toObject());
+			int size = in.readInt();
+			if (size == 0)
+				data = null;
+			else {
+				int size2 = in.readInt();
+				for (int i = 0; i < size; i++) {
+					Object[] w = new Object[size2];
+					for (int j = 0; j < size2; j++)
+						w[j] = in.readUTF();
+					data.add(w);
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
+		/*
+		 * selectProdukty = DataBaseGet.selectProdukty();
+		 * 
+		 * for (int i = 0; i < selectProdukty.size(); i++) {
+		 * data.add(selectProdukty.get(i).toObject()); }
+		 */
 		model = new SerachList(data);
 		JTable table = new JTable(model);
 
@@ -121,8 +147,8 @@ public class ClientApp extends JPanel implements ActionListener {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		JPanel firstPanel = new JPanel();
-	    firstPanel.setLayout(new GridLayout(4, 4));
-	    firstPanel.setMaximumSize(new Dimension(400, 400));
+		firstPanel.setLayout(new GridLayout(4, 4));
+		firstPanel.setMaximumSize(new Dimension(400, 400));
 		b1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		b2.setAlignmentX(Component.CENTER_ALIGNMENT);
 		b3.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -147,11 +173,6 @@ public class ClientApp extends JPanel implements ActionListener {
 
 	}
 
-	private List<Produkt> selectProdukty() {
-		
-		return null;
-	}
-
 	public void actionPerformed(ActionEvent event) {
 		String command = event.getActionCommand();
 		if (command.equals("Dodaj do koszyka")) {
@@ -160,28 +181,58 @@ public class ClientApp extends JPanel implements ActionListener {
 			dataKoszyk.add(data.get(currentChoosed));
 			modelKoszyk.fireTableDataChanged();
 		} else if (command.equals("Wyszukaj")) {
-			Integer[] w = new Integer[dataKoszyk.size()];
-			if(w.length == 0)
+			Set<Integer> w = new HashSet<Integer>();
+			if (dataKoszyk.size() == 0)
 				return;
-			for(int i = 0; i < dataKoszyk.size(); i ++)
-				w[i] = (Integer) dataKoszyk.get(i)[0];
-			
-			List<SerachResult> serachRes = DataBaseGet.serachQuery(w);
-			if(serachRes.size() > 0)
-				System.out.println(serachRes.get(0).id_sklep + " " + serachRes.get(0).resultSum);
-			JFrame frame2 = new JFrame("Oszczedny Konsument");
-			frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame2.getContentPane().setLayout(
-					new BoxLayout(frame2.getContentPane(), BoxLayout.Y_AXIS));
+			for (int i = 0; i < dataKoszyk.size(); i++)
+				w.add((Integer) dataKoszyk.get(i)[0]);
+			try {
+				out.writeUTF("SERACHQUERY");
+				out.flush();
+				out.writeInt(w.size());
+				out.flush();
+				for (Integer r : w) {
+					out.writeInt(r);
+					out.flush();
+				}
 
-			ShowResult newContentPane = new ShowResult(in,out);
-			
-			frame2.pack();
-			frame2.setVisible(true);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			List<SerachResult> serachRes = null;
+			// DataBaseGet.serachQuery(w);
+
+			/*
+			 * JFrame frame2 = new JFrame("Oszczedny Konsument");
+			 * frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			 * frame2.getContentPane().setLayout( new
+			 * BoxLayout(frame2.getContentPane(), BoxLayout.Y_AXIS));
+			 * 
+			 * ShowResult newContentPane = new ShowResult(in,out);
+			 * 
+			 * frame2.pack(); frame2.setVisible(true);
+			 */
+			if (serachRes.size() > 0)
+				JOptionPane.showMessageDialog(frame, new String(
+						"TWOJ SKLEP MA ID: " + serachRes.get(0).id_sklep
+								+ " KOSZT ZAKUPOW:"
+								+ serachRes.get(0).resultSum));
+			else
+				JOptionPane
+						.showMessageDialog(
+								frame,
+								new String(
+										"W zadnym ze sklepow nie ma wszystkich produktow z listy."));
 		} else if (command.equals("Wyczysc liste zakupow")) {
 			dataKoszyk.clear();
 			modelKoszyk.fireTableDataChanged();
 		} else if (command.equals("Usun")) {
+			if (currentChoosed2 < 0)
+				return;
+			dataKoszyk.remove(currentChoosed2);
+			modelKoszyk.fireTableDataChanged();
+		} else if (command.equals("Opinie")) {
 			if (currentChoosed2 < 0)
 				return;
 			dataKoszyk.remove(currentChoosed2);
@@ -316,12 +367,12 @@ public class ClientApp extends JPanel implements ActionListener {
 	}
 
 	public static void createAndShowGUI(DataInputStream in, DataOutputStream out) {
-		JFrame frame = new JFrame("Oszczedny Konsument");
+		frame = new JFrame("Oszczedny Konsument");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(
 				new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
-		ClientApp newContentPane = new ClientApp(in,out);
+		ClientApp newContentPane = new ClientApp(in, out);
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
 
@@ -332,7 +383,7 @@ public class ClientApp extends JPanel implements ActionListener {
 	public static void main(String[] args) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				//createAndShowGUI();
+				createAndShowGUI(null, null);
 			}
 		});
 	}
