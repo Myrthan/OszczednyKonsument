@@ -139,6 +139,7 @@ public class ClientApp extends JPanel implements ActionListener {
 		b4.addActionListener(this);
 
 		JButton b5 = new JButton("Opinie");
+		//b5.setA
 		b5.setVerticalTextPosition(AbstractButton.VERTICAL);
 		b5.setHorizontalTextPosition(AbstractButton.CENTER);
 		b5.setMnemonic(KeyEvent.VK_M);
