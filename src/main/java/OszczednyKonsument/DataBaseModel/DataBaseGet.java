@@ -74,7 +74,24 @@ public class DataBaseGet {
 			}
 		}, null);
 	}
-
+	public static List<Sklep> selectSklepy(Integer id) {
+		return select("select * from sklepy where id_sklep =" + id.toString() + ";", new ReadGetter<Sklep>() {
+			@Override
+			public Sklep read() {
+				try {
+					return new Sklep(rs.getInt("id_sklep"), rs
+							.getString("nazwa"), rs.getString("adres"), rs
+							.getString("miasto"), rs.getString("kod_pocztowy"),
+							rs.getString("godziny_otwarcia"), rs
+									.getString("numer_kontaktowy"), rs
+									.getString("właściciel"));
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		}, null);
+	}
 	public static List<Opinia> selectOpinie(Integer id_produkt) {
 		return select("select nick,komentarz,ocena,data from opinie o "
 				+ "join klienci k on o.klient=k.id_klient where o.produkt="

@@ -5,4 +5,26 @@ na zaoszczędzeniu czasu przy planowaniu zakupów. Aplikacja pozwala na skompono
 listy zakupów z produktów dostępnych w bazie danych, a następnie proponuje najlepszy sklep do dokonania
 takich zakupów oraz koszt . Użytkownik może również zapoznać się z opiniami konsumentów na temat produktów oraz nawet 
 samemu wyrazić swoją opinie. Również jest możliwość zapoznania się z opiniami fachowców dzięki przechowywanym
-w bazie danych Recenzjach.   
+w bazie danych Recenzjach. 
+
+
+Krótka notka techniczna:
+
+Na serwerze znajduję się centralna baza danych, używkoników, sklepów produktów opini, recenzji. 
+Plik tworzący baze danych to create.sql
+Plik usuwajacy bazę danych to clear.sql
+Diagram bazy: ERD_DIAGRAM.jpg
+
+Aby móc korzystać z aplikacji trzeba stworzyc bazę danych z plików powyżej, następnie w klasie
+OszczednyKonsument.DataBase zmienić lokalizację do niej (linjka 42)
+connection = DriverManager.getConnection(
+					url,
+					"postgres", "oszczedny");
+Jak stworzyć własnego użytkownika i własną bazę danych, jest mnóstwo tutoriali podaję jeden:
+http://www.cyberciti.biz/faq/howto-add-postgresql-user-account/
+http://www.postgresql.org/docs/9.1/static/app-createuser.html
+
+Aby uruchomić LAN:
+Trzeba odpalić klasę Server.java a następnie Client.java lub ClientApp.java.
+
+Aplikacja umożliwa szyfrowane logowanie sie oraz tworzenie nowych użytkowników którzy są dodawani do bazy danych.

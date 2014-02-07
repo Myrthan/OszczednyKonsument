@@ -5,19 +5,18 @@ import java.sql.*;
 import javax.naming.ConfigurationException;
 
 /**
- * Baza danych.
- * Zaimplementowane funkcje:
- * -Łączenie się z bazą danych
- *
+ * Baza danych. Zaimplementowane funkcje: -Łączenie się z bazą danych
+ * 
  * 
  * @author myrthan
  * 
- *
+ * 
  */
 public class Database {
 
 	private static boolean isPrepared = false;
 	private static Connection connection = null;
+	private static String url = "jdbc:postgresql://192.168.1.6/oszczednykonsumentdatabase";
 	/**
 	 * @param args
 	 */
@@ -41,14 +40,15 @@ public class Database {
 
 		try {
 			connection = DriverManager.getConnection(
-					"jdbc:postgresql://localhost/piotr",
-					"piotr", "kocham1ale12");
+					url,
+					"postgres", "oszczedny");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return connection;
 	}
+
 	/**
 	 * 
 	 */
@@ -60,5 +60,5 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	} 
+	}
 }

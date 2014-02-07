@@ -1,14 +1,14 @@
 package OszczednyKonsument.DataBaseModel;
 
 public class Sklep {
-	private Integer id_sklep;
-	private String nazwa;
-	private String adres;
-	private String miasto;
-	private String kod_pocztowy;
-	private String godziny_otwarcia;
-	private String numer_kontaktowy;
-	private String wlasciciel;
+	public Integer id_sklep;
+	public String nazwa;
+	public String adres;
+	public String miasto;
+	public String kod_pocztowy;
+	public String godziny_otwarcia;
+	public String numer_kontaktowy;
+	public String wlasciciel;
 
 	public Sklep(Integer Id, String nazwa, String adres, String miasto,
 			String kod_pocztowy, String godziny_otwarcia,

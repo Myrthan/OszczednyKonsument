@@ -20,4 +20,21 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>ERD_DIAGRAM.jpg</name>
+			<type>1</type>
+			<location>/home/myrthan/git/Myrthan/OszczednyKonsument/1623950_457697017664947_781034952_o.jpg</location>
+		</link>
+		<link>
+			<name>clear.sql</name>
+			<type>1</type>
+			<location>/home/myrthan/git/Myrthan/OszczednyKonsument/clear.sql</location>
+		</link>
+		<link>
+			<name>create.sql</name>
+			<type>1</type>
+			<location>/home/myrthan/git/Myrthan/OszczednyKonsument/create.sql</location>
+		</link>
+	</linkedResources>
 </projectDescription>

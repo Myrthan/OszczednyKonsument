@@ -221,6 +221,19 @@ public class ClientApp extends JPanel implements ActionListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			String[] info = new String[7];
+			try {
+				info[0] = in.readUTF();
+				info[1] = in.readUTF();
+				info[2] = in.readUTF();
+				info[3] = in.readUTF();
+				info[4] = in.readUTF();
+				info[5] = in.readUTF();
+				info[6] = in.readUTF();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//List<SerachResult> serachRes = null;
 			// DataBaseGet.serachQuery(w);
 
@@ -236,8 +249,10 @@ public class ClientApp extends JPanel implements ActionListener {
 			 */
 			if (serachRes.size() > 0)
 				JOptionPane.showMessageDialog(frame, new String(
-						"TWOJ SKLEP MA ID: " + serachRes.get(0).id
-								+ " KOSZT ZAKUPOW:"
+						"Nazwa najlepszego sklepu: " + info[0] + ",adres: "
+						+ info[1] + ", godziny otwarcia: " + info[2] +  ", kod pocztowy: " + info[3] +
+						", miasto " + info[4] + ", numer kontaktowy: " + info[5] + ", wlasciciel:" + info[6]
+								+ " \nKOSZT ZAKUPOW:"
 								+ serachRes.get(0).sum));
 			else
 				JOptionPane

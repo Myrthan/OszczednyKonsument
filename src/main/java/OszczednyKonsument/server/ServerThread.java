@@ -19,6 +19,7 @@ import OszczednyKonsument.DataBaseModel.Opinia;
 import OszczednyKonsument.DataBaseModel.Produkt;
 import OszczednyKonsument.DataBaseModel.Recenzja;
 import OszczednyKonsument.DataBaseModel.SerachResult;
+import OszczednyKonsument.DataBaseModel.Sklep;
 
 public class ServerThread extends Thread {
 	Socket socket;
@@ -180,6 +181,42 @@ public class ServerThread extends Thread {
 						out.writeDouble(serachRes.get(i).resultSum);
 						out.flush();
 					}
+					Sklep sklep = DataBaseGet.selectSklepy(serachRes.get(0).id_sklep).get(0);
+					if(sklep.nazwa == null )
+						out.writeUTF(" ");
+					else
+						out.writeUTF(sklep.nazwa);
+					out.flush();
+					if(sklep.adres == null )
+						out.writeUTF(" ");
+					else
+						out.writeUTF(sklep.adres);
+					out.flush();
+					if(sklep.godziny_otwarcia == null )
+						out.writeUTF(" ");
+					else
+						out.writeUTF(sklep.godziny_otwarcia);
+					out.flush();
+					if(sklep.kod_pocztowy == null )
+						out.writeUTF(" ");
+					else
+						out.writeUTF(sklep.kod_pocztowy);
+					out.flush();
+					if(sklep.miasto == null )
+						out.writeUTF(" ");
+					else
+						out.writeUTF(sklep.miasto);
+					out.flush();
+					if(sklep.numer_kontaktowy == null )
+						out.writeUTF(" ");
+					else
+						out.writeUTF(sklep.numer_kontaktowy);
+					out.flush();
+					if(sklep.wlasciciel == null )
+						out.writeUTF(" ");
+					else
+						out.writeUTF(sklep.wlasciciel);
+					out.flush();
 					break;
 				}
 			}
