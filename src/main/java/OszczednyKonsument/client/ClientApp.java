@@ -436,10 +436,21 @@ public class ClientApp extends JPanel implements ActionListener {
 				@Override
 				public void run() {
 					if (currentChoosed != -1){
-						System.out.println("here");
-						ProductPanel.createAndShowGUI(
-								new Integer( (String)((data.get(currentChoosed)[0]))),
-								in, out);
+						SwingUtilities.invokeLater(new Runnable(){
+							public void run(){
+								JFrame parrent=(JFrame) SwingUtilities.getWindowAncestor(ClientApp.this);
+								parrent.removeAll();
+								parrent.setVisible(false);
+							}
+						});
+						SwingUtilities.invokeLater(new Runnable(){
+							public void run(){
+								ProductPanel.createAndShowGUI(
+										new Integer( (String)((data.get(currentChoosed)[0]))),
+										in, out);
+							}
+						});
+
 					}
 				}
 			});

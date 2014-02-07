@@ -59,6 +59,8 @@ import java.io.IOException;
 
 import javax.swing.Action;
 
+import java.awt.event.ActionListener;
+
 public class ProductPanel extends JPanel {
 	private JTextField mark;
 	private Integer idProduktu;
@@ -67,6 +69,7 @@ public class ProductPanel extends JPanel {
 	DataInputStream in; 
 	DataOutputStream out;
 	private final Action action = new SwingAction();
+	private final Action action_1 = new SwingAction_1();
 	public ProductPanel(Integer produktId, Integer idKlienta,DataInputStream in, DataOutputStream out) {
 		this.in=in;
 		this.out=out;
@@ -272,6 +275,34 @@ public class ProductPanel extends JPanel {
 		JButton commitButton=new JButton("Publikuj");
 		commitButton.setAction(action);
 		panel.add(commitButton);
+		
+		JButton btnPowrt = new JButton("Powrót");
+		btnPowrt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SwingUtilities.invokeLater(new Runnable(){
+					public void run(){
+						ClientApp.createAndShowGUI(in, out);
+					}
+				});
+				SwingUtilities.invokeLater(new Runnable(){
+					public void run(){
+						JFrame parrent=(JFrame) SwingUtilities.getWindowAncestor(ProductPanel.this);
+						parrent.removeAll();
+						parrent.setVisible(false);
+					}
+				});
+			}
+		});
+		btnPowrt.setAction(action_1);
+		panel.add(btnPowrt);
 		revalidate();
+	}
+	private class SwingAction_1 extends AbstractAction {
+		public SwingAction_1() {
+			putValue(NAME, "Powrót");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+		}
 	}
 }
