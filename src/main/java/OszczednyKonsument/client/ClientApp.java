@@ -25,6 +25,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.sql.Connection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -39,12 +41,14 @@ public class ClientApp extends JPanel implements ActionListener {
 	private Koszyk modelKoszyk;
 	private int currentChoosed = -1;
 	private int currentChoosed2 = -1;
+	DataInputStream in;
+	DataOutputStream out;
 
 	public ClientApp() {
 		super(new GridLayout(1, 0));
 
 		// TEST dla produktow
-		selectProdukty = DataBaseGet.selectProdukty();
+		selectProdukty = selectProdukty();
 
 		for (int i = 0; i < selectProdukty.size(); i++) {
 			data.add(selectProdukty.get(i).toObject());
@@ -103,6 +107,11 @@ public class ClientApp extends JPanel implements ActionListener {
 		koszyk.setAutoCreateRowSorter(true);
 		koszyk.getSelectionModel().addListSelectionListener(new RowListener2());
 
+	}
+
+	private List<Produkt> selectProdukty() {
+		
+		return null;
 	}
 
 	public void actionPerformed(ActionEvent event) {
