@@ -1,5 +1,7 @@
 package OszczednyKonsument.client;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import javax.swing.JFrame;
 
 import java.awt.FlowLayout;
@@ -36,6 +38,11 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.AbstractAction;
@@ -49,8 +56,12 @@ public class Logger extends JPanel {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private final Action action = new SwingAction();
+	DataOutputStream out;
+	DataInputStream in;
 
-	public Logger() {
+	public Logger(DataInputStream in, DataOutputStream out) {
+		this.in=in;
+		this.out=out;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
@@ -206,11 +217,11 @@ public class Logger extends JPanel {
 		*/
 	}
 	
-	public static void createAndShowGUI() {
+	public static void createAndShowGUI(DataInputStream in, DataOutputStream out) {
 		JFrame frame = new JFrame("Oszczedny Konsument");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		Logger newContentPane = new Logger();
+		
+		Logger newContentPane = new Logger(in,out);
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
 
@@ -221,13 +232,36 @@ public class Logger extends JPanel {
 	public static void main(String[] args){
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				createAndShowGUI();
+				SSLSocket socket;
+				System.setProperty("javax.net.ssl.trustStore","LsKeystore");
+	    		System.setProperty("javax.net.ssl.trustStorePassword","admin12");
+				Integer portNr = 30002;
+				SSLSocketFactory mySocketFactory=(SSLSocketFactory)SSLSocketFactory.getDefault();
+				try {
+					socket=(SSLSocket)mySocketFactory.createSocket("localhost", portNr);
+					createAndShowGUI(new DataInputStream(socket.getInputStream()),
+					new DataOutputStream(socket.getOutputStream()));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 	}
 
 	private boolean checkPassword(String login, char[] passwd){
-		return DataBaseGet.checkPassword(login, passwd);
+		try {
+			out.writeUTF("LOGIN");
+			out.flush();
+			out.writeUTF(login);
+			out.flush();
+			out.writeUTF(new String(passwd));
+			return in.readBoolean();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
 	}
 	private class SwingAction extends AbstractAction {
 		public SwingAction() {

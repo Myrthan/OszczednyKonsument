@@ -1,5 +1,7 @@
 package OszczednyKonsument.client;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import javax.swing.JPanel;
 
 import java.awt.GridBagLayout;
@@ -28,7 +30,11 @@ import javax.swing.Action;
 
 import OszczednyKonsument.DataBaseModel.DataBaseGet;
 import OszczednyKonsument.DataBaseModel.DataBaseUpdate;
+
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class Register extends JPanel {
 	/**
@@ -46,7 +52,11 @@ public class Register extends JPanel {
 	private JTextField textField_nick;
 	private final Action action = new SwingAction();
 	private JTextField textField_nazw;
-	public Register() {
+	DataOutputStream out;
+	DataInputStream in;
+	public Register(	DataInputStream in,DataOutputStream out) {
+		this.in=in;
+		this.out=out;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -242,11 +252,11 @@ public class Register extends JPanel {
 		gbc_btnPowr.gridy = 13;
 		add(btnPowr, gbc_btnPowr);
 	}
-	public static void createAndShowGUI() {
+	public static void createAndShowGUI(DataInputStream in, DataOutputStream out) {
 		JFrame frame = new JFrame("Oszczedny Konsument");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		Register newContentPane = new Register();
+		Register newContentPane = new Register(in,out);
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
 
@@ -257,7 +267,19 @@ public class Register extends JPanel {
 	public static void main(String[] args){
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				createAndShowGUI();
+				SSLSocket socket;
+				System.setProperty("javax.net.ssl.trustStore","LsKeystore");
+	    		System.setProperty("javax.net.ssl.trustStorePassword","admin12");
+				Integer portNr = 30002;
+				SSLSocketFactory mySocketFactory=(SSLSocketFactory)SSLSocketFactory.getDefault();
+				try {
+					socket=(SSLSocket)mySocketFactory.createSocket("localhost", portNr);
+					createAndShowGUI(new DataInputStream(socket.getInputStream()),
+					new DataOutputStream(socket.getOutputStream()));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -289,15 +311,11 @@ public class Register extends JPanel {
 			if(!wiek.equals(""))
 				myWiek = new Integer(wiek);
 			else
-				myWiek=null;
+				myWiek=-1;
 			if(nick.equals("") || Arrays.equals(haslo,"".toCharArray()) || email.equals("")){
 				return false;
 			}
-			if(nazwisko.equals("")) nazwisko=null;
-			if(imie.equals("")) imie=null;
-			if(wiek.equals("")) myWiek=null;
-			if(adres.equals("")) adres=null;
-			if(miasto.equals("")) miasto=null;
+
 			
 			if(!kod_pocztowy.equals("") && !kod_pocztowy.matches("\\d\\d-\\d\\d\\d")){
 				SwingUtilities.invokeLater(new Runnable(){
@@ -323,14 +341,13 @@ public class Register extends JPanel {
 				});
 				return false;
 			}
-			if(DataBaseUpdate.insertKlient(nazwisko,
+			if(insertKlient(nazwisko,
 					imie,
 					myWiek,
 					adres,
 					miasto,
 					kod_pocztowy,
 					nick,
-					new Date(-1),
 					new String(haslo),email)){	
 					return true;
 			}
@@ -359,7 +376,36 @@ public class Register extends JPanel {
 		}
 		
 	}
+	private boolean insertKlient(String nazwisko, String imie, Integer myWiek,
+			String adres, String miasto, String kod_pocztowy, String nick,
+			 String haslo, String email) {
+		try {
+			out.writeUTF("REGISTER");
+			out.writeUTF(nazwisko);
+			out.writeUTF(imie);
+			out.writeInt(myWiek);
+			out.writeUTF(adres);
+			out.writeUTF(miasto);
+			out.writeUTF(kod_pocztowy);
+			out.writeUTF(nick);
+			out.writeUTF(haslo);
+			out.writeUTF(email);
+			return in.readBoolean();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 	private boolean checkIfNickExists(String nick) {
-		return DataBaseGet.checkIfNickExists(nick);
+		try {
+			out.writeUTF("NICKEXIST");
+			out.writeUTF(nick);
+			return in.readBoolean();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
 	}
 }

@@ -185,7 +185,7 @@ public class DataBaseGet {
 		return false;
 	}
 
-	public static boolean checkIfNickExists(String nick) {
+	public static int checkIfNickExists(String nick) {
 		List<Boolean> ans = select("select '" + nick
 				+ "' in (select nick from klienci) as x;",
 				new ReadGetter<Boolean>() {
@@ -203,7 +203,7 @@ public class DataBaseGet {
 					}
 				}, null);
 		if (ans.size() != 0) {
-			return ans.get(0);
+			return ans.get(0).;
 		}
 		return false;
 	}
