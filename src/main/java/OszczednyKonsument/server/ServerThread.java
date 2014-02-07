@@ -158,6 +158,7 @@ public class ServerThread extends Thread {
 					out.writeInt(selectProdukty.get(0).size);
 					out.flush();
 					for (Produkt r : selectProdukty) {
+						System.out.println(r.id_produkt + " " + r.nazwa + " " + r.producent);
 						out.writeUTF(r.id_produkt.toString());
 						out.flush();
 						out.writeUTF(r.nazwa);

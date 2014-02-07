@@ -75,14 +75,21 @@ public class ClientApp extends JPanel implements ActionListener {
 			out.flush();
 
 			int size = in.readInt();
-			if (size == 0)
+			System.out.println(size);
+			if (size <= 0)
 				data = null;
 			else {
-				int size2 = in.readInt();
+				int size2 = in.readInt()-1;
+
+				System.out.println(size2);
 				for (int i = 0; i < size; i++) {
+					
+					System.out.println("HOLA " + i);
 					Object[] w = new Object[size2];
-					for (int j = 0; j < size2; j++)
+					for (int j = 0; j < 4; j++){
 						w[j] = in.readUTF();
+						System.out.println(w[j]);
+					}
 					data.add(w);
 				}
 			}
@@ -90,7 +97,7 @@ public class ClientApp extends JPanel implements ActionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+System.out.println("AHAH");
 		/*
 		 * selectProdukty = DataBaseGet.selectProdukty();
 		 * 
@@ -212,6 +219,7 @@ public class ClientApp extends JPanel implements ActionListener {
 					serachRes.add(new xx());
 					serachRes.get(i).id = in.readInt();
 					serachRes.get(i).sum = in.readDouble();
+					System.out.println("X");
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
