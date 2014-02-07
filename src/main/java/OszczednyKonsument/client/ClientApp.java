@@ -50,6 +50,7 @@ public class ClientApp extends JPanel implements ActionListener {
 	private Koszyk modelKoszyk;
 	private int currentChoosed = -1;
 	private int currentChoosed2 = -1;
+
 	public DataOutputStream out;
 	public DataInputStream in;
 
@@ -58,6 +59,19 @@ public class ClientApp extends JPanel implements ActionListener {
 		super(new GridLayout());
 		this.in = in;
 		this.out = out;
+<<<<<<< HEAD
+=======
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				createAndShowGUI();
+			}
+		});
+	}
+	private ClientApp() {
+		super(new GridLayout());
+
+
+>>>>>>> branch 'master' of https://github.com/Myrthan/OszczednyKonsument.git
 		selectProdukty = DataBaseGet.selectProdukty();
 
 		for (int i = 0; i < selectProdukty.size(); i++) {
@@ -143,6 +157,11 @@ public class ClientApp extends JPanel implements ActionListener {
 		koszyk.getSelectionModel().addListSelectionListener(new RowListener2());
 		add(koszyk);
 
+	}
+
+	private List<Produkt> selectProdukty() {
+		
+		return null;
 	}
 
 	public void actionPerformed(ActionEvent event) {
