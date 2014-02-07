@@ -1,5 +1,7 @@
 package OszczednyKonsument.client;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -35,6 +37,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -332,7 +335,19 @@ public class ClientApp extends JPanel implements ActionListener {
 	public static void main(String[] args) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				//createAndShowGUI();
+				SSLSocket socket;
+				System.setProperty("javax.net.ssl.trustStore","LsKeystore");
+	    		System.setProperty("javax.net.ssl.trustStorePassword","admin12");
+				Integer portNr = 30002;
+				SSLSocketFactory mySocketFactory=(SSLSocketFactory)SSLSocketFactory.getDefault();
+				try {
+					socket=(SSLSocket)mySocketFactory.createSocket("localhost", portNr);
+					Logger.createAndShowGUI(new DataInputStream(socket.getInputStream()),
+					new DataOutputStream(socket.getOutputStream()));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 	}
