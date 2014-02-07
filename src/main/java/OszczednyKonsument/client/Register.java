@@ -28,6 +28,7 @@ import javax.swing.Action;
 
 import OszczednyKonsument.DataBaseModel.DataBaseGet;
 import OszczednyKonsument.DataBaseModel.DataBaseUpdate;
+import java.awt.event.ActionListener;
 
 public class Register extends JPanel {
 	/**
@@ -229,6 +230,17 @@ public class Register extends JPanel {
 		gbc_btnZarejestrujSi.gridx = 1;
 		gbc_btnZarejestrujSi.gridy = 12;
 		add(btnZarejestrujSi, gbc_btnZarejestrujSi);
+		
+		JButton btnPowr = new JButton("Logowanie");
+		btnPowr.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		GridBagConstraints gbc_btnPowr = new GridBagConstraints();
+		gbc_btnPowr.insets = new Insets(0, 0, 5, 0);
+		gbc_btnPowr.gridx = 1;
+		gbc_btnPowr.gridy = 13;
+		add(btnPowr, gbc_btnPowr);
 	}
 	public static void createAndShowGUI() {
 		JFrame frame = new JFrame("Oszczedny Konsument");

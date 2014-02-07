@@ -1,8 +1,8 @@
 package OszczednyKonsument.DataBaseModel;
 
 public class Recenzja {
-	String recenzja;
-	String autor;
+	public String recenzja;
+	public String autor;
 	public Recenzja(String recenzja, String autor){
 		this.recenzja=recenzja;
 		this.autor=autor;

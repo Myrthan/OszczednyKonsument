@@ -159,7 +159,7 @@ public class DataBaseUpdate {
 		return true;
 	}
 	@SuppressWarnings("javadoc")
-	public boolean insertOpinia(String komentarz,Integer ocena,Integer produkt, Integer klient) {
+	public static boolean insertOpinia(String komentarz,Integer ocena,Integer produkt, Integer klient) {
 		try {
 			PreparedStatement prepStmt = Database.getConnection()
 					.prepareStatement(
