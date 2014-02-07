@@ -109,7 +109,15 @@ public class Logger extends JPanel {
 				if(checkPassword(textField.getText(),passwordField.getPassword())){
 					SwingUtilities.invokeLater(new Runnable(){
 						public void run(){
-							JOptionPane.showMessageDialog(Logger.this, "Login OK");
+							//JOptionPane.showMessageDialog(Logger.this, "Login OK");
+							ClientApp.createAndShowGUI(Logger.this.in,Logger.this.out);
+						}
+					});
+					SwingUtilities.invokeLater(new Runnable(){
+						public void run(){
+							JFrame parrent=(JFrame) SwingUtilities.getWindowAncestor(Logger.this);
+							parrent.removeAll();
+							parrent.setVisible(false);
 						}
 					});
 				}
