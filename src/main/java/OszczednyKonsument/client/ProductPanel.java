@@ -1,4 +1,6 @@
 package OszczednyKonsument.client;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
@@ -28,6 +30,8 @@ import javax.swing.JButton;
 import javax.swing.JTabbedPane;
 
 import java.awt.FlowLayout;
+import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.miginfocom.swing.MigLayout;
@@ -49,6 +53,9 @@ import javax.swing.JFormattedTextField;
 import javax.swing.AbstractAction;
 
 import java.awt.event.ActionEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 import javax.swing.Action;
 
@@ -57,8 +64,12 @@ public class ProductPanel extends JPanel {
 	private Integer idProduktu;
 	private Integer idKlienta;
 	private JTextPane comment;
+	DataInputStream in; 
+	DataOutputStream out;
 	private final Action action = new SwingAction();
-	public ProductPanel(Integer produktId, Integer idKlienta) {
+	public ProductPanel(Integer produktId, Integer idKlienta,DataInputStream in, DataOutputStream out) {
+		this.in=in;
+		this.out=out;
 		this.idKlienta=idKlienta;
 		this.idProduktu=produktId;
 		refresh();
@@ -66,20 +77,50 @@ public class ProductPanel extends JPanel {
 	
 	
 	private List<Recenzja> getRecenzjeList(Integer produktId) {
-		return DataBaseGet.selectRecenzje(produktId);
+		List<Recenzja> list=new LinkedList<Recenzja>();
+		try{
+			out.writeUTF("RECENZJE");
+			out.flush();
+			out.writeInt(produktId);
+			int size=in.readInt();
+			for(int i=0; i<size; ++i){
+				list.add(new Recenzja(in.readUTF(),in.readUTF()));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			return list;
+		}
 	}
 
 
 	private List<Opinia> getOpinieList(Integer produktId) {
-		return DataBaseGet.selectOpinie(produktId);
+		List<Opinia> opinie= new LinkedList<Opinia>();
+		try{
+			out.writeUTF("OPINIE");
+			out.flush();
+			out.writeInt(produktId);
+			out.flush();
+			int size=in.readInt();
+			for(int i=0; i<size; ++i){
+				opinie.add(new Opinia(in.readUTF(),in.readUTF(),in.readInt(),new Timestamp(in.readLong())));
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		finally{
+			return opinie;
+		}
+		
 	}
 
 
-	public static void createAndShowGUI(Integer i,String nick) {
+	public static void createAndShowGUI(Integer i,DataInputStream in, DataOutputStream out) {
 		JFrame frame = new JFrame("Oszczedny Konsument");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		ProductPanel newContentPane = new ProductPanel(i,2);
+		ProductPanel newContentPane = new ProductPanel(i,2,in,out);
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
 		frame.pack();
@@ -89,7 +130,18 @@ public class ProductPanel extends JPanel {
 	public static void main(String[] args){
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				createAndShowGUI(6,"Prastaruszek");
+				SSLSocket socket;
+				System.setProperty("javax.net.ssl.trustStore","LsKeystore");
+	    		System.setProperty("javax.net.ssl.trustStorePassword","admin12");
+				Integer portNr = 30002;
+				SSLSocketFactory mySocketFactory=(SSLSocketFactory)SSLSocketFactory.getDefault();
+				try {
+					socket=(SSLSocket)mySocketFactory.createSocket("localhost", portNr);
+					createAndShowGUI(6,new DataInputStream(socket.getInputStream()),
+							new DataOutputStream(socket.getOutputStream()));
+				}catch(IOException e){
+					
+				}
 			}
 		});
 	}
@@ -135,7 +187,21 @@ public class ProductPanel extends JPanel {
 		}
 	}
 	void commitOpinia(String comment, Integer mark){
-		DataBaseUpdate.insertOpinia(comment, mark, idProduktu, idKlienta);
+		try {
+			out.writeUTF("INSERTOPINIA");
+			out.flush();
+			out.writeUTF(comment);
+			out.flush();
+			out.writeInt(mark);
+			out.flush();
+			out.writeInt(idProduktu);
+			out.flush();
+			in.readUTF();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	private void refresh(){
 		removeAll();

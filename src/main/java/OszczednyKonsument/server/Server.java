@@ -5,6 +5,11 @@ import java.net.ServerSocket;
 import java.sql.Connection;
 import java.util.LinkedList;
 
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+
+
 import OszczednyKonsument.DataBase.Database;
 import OszczednyKonsument.DataBaseModel.DataBaseGet;
 
@@ -19,26 +24,27 @@ public class Server {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		/*
-		try {
-			ServerSocket listener = new ServerSocket(17373);
-			while(!Thread.currentThread().isInterrupted()) {
-				
+	public static void main(String args[]){	
+		try{
+	    	System.setProperty("javax.net.ssl.keyStore","LsKeystore");
+			System.setProperty("javax.net.ssl.keyStorePassword","admin12");
+			SSLServerSocketFactory SocketFactory=(SSLServerSocketFactory)SSLServerSocketFactory.getDefault();
+
+			System.out.println("Server succesfully started.");
+			SSLServerSocket welcomeSocket=(SSLServerSocket)SocketFactory.createServerSocket(30002);
+						//welcomeSocket.setEnabledCipherSuites(new String[] {"TLS_RSA_WITH_AES_128_CBC_SHA"});
+
+			while(true){
+				SSLSocket connectionSocket=(SSLSocket)welcomeSocket.accept();
+				/*for(String x : connectionSocket.getEnabledCipherSuites()){
+					System.out.println(x);
+				}*/
+				new Thread(new ServerThread(connectionSocket)).start();
 			}
-			listener.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
-		
-		
-		// TODO Auto-generated method stub
-		//System.out.println(DataBaseGet.selectProdukty());
-		System.out.println(DataBaseGet.selectProdukty());
-		System.out.println(DataBaseGet.selectOpinie(12));
-		System.out.println(DataBaseGet.selectOpinie("Ożywi"));
-		System.out.println(DataBaseGet.selectRecenzje(6));
-		System.out.println(DataBaseGet.selectRecenzje("Ewy-coś"));
+		}
+		catch(IOException e){
+			System.out.println(e+"tata");
+		}
 	}
 
 }
