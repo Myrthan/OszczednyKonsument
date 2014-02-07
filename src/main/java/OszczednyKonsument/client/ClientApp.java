@@ -53,18 +53,11 @@ public class ClientApp extends JPanel implements ActionListener {
 	public DataOutputStream out;
 	public DataInputStream in;
 
+	
 	public ClientApp(DataInputStream in, DataOutputStream out) {
+		super(new GridLayout());
 		this.in = in;
 		this.out = out;
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				createAndShowGUI();
-			}
-		});
-	}
-	private ClientApp() {
-		super(new GridLayout());
-
 		selectProdukty = DataBaseGet.selectProdukty();
 
 		for (int i = 0; i < selectProdukty.size(); i++) {
@@ -165,6 +158,7 @@ public class ClientApp extends JPanel implements ActionListener {
 				return;
 			for(int i = 0; i < dataKoszyk.size(); i ++)
 				w[i] = (Integer) dataKoszyk.get(i)[0];
+			
 			List<SerachResult> serachRes = DataBaseGet.serachQuery(w);
 			if(serachRes.size() > 0)
 				System.out.println(serachRes.get(0).id_sklep + " " + serachRes.get(0).resultSum);
@@ -306,13 +300,13 @@ public class ClientApp extends JPanel implements ActionListener {
 		}
 	}
 
-	public static void createAndShowGUI() {
+	public static void createAndShowGUI(DataInputStream in, DataOutputStream out) {
 		JFrame frame = new JFrame("Oszczedny Konsument");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(
 				new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
-		ClientApp newContentPane = new ClientApp();
+		ClientApp newContentPane = new ClientApp(in,out);
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
 
@@ -323,7 +317,7 @@ public class ClientApp extends JPanel implements ActionListener {
 	public static void main(String[] args) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				createAndShowGUI();
+				//createAndShowGUI();
 			}
 		});
 	}
