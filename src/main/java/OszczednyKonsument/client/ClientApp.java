@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -44,6 +45,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
 public class ClientApp extends JPanel implements ActionListener {
 	private boolean DEBUG = false;
 	private List<Produkt> selectProdukty;
@@ -56,6 +60,7 @@ public class ClientApp extends JPanel implements ActionListener {
 
 	public DataOutputStream out;
 	public DataInputStream in;
+	private final Action action = new SwingAction();
 
 	
 	
@@ -110,6 +115,7 @@ public class ClientApp extends JPanel implements ActionListener {
 		b4.addActionListener(this);
 
 		JButton b5 = new JButton("Opinie");
+		b5.setAction(action);
 		b5.setVerticalTextPosition(AbstractButton.VERTICAL);
 		b5.setHorizontalTextPosition(AbstractButton.CENTER);
 		b5.setMnemonic(KeyEvent.VK_M);
@@ -350,5 +356,20 @@ public class ClientApp extends JPanel implements ActionListener {
 				}
 			}
 		});
+	}
+	private class SwingAction extends AbstractAction {
+		public SwingAction() {
+			putValue(NAME, "Opinie");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					if(currentChoosed!=-1)
+						ProductPanel.createAndShowGUI(selectProdukty.get(currentChoosed).id_produkt, in, out);
+				}
+			});
+		}
 	}
 }
